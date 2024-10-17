@@ -1,0 +1,103 @@
+/**
+ * Copyright 2024 IBM Corp.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@use 'styles/common' as *;
+
+.root {
+  display: flex;
+  overflow: hidden;
+
+  .input {
+    position: relative;
+    transition: flex $duration-fast-01 ease-out;
+    min-block-size: 0;
+    block-size: rem(32px);
+    @include truncate();
+
+    span,
+    input {
+      display: block;
+      block-size: rem(32px);
+      line-height: rem(32px);
+      font-size: rem(16px);
+      padding-inline: 0 $spacing-03;
+      letter-spacing: rem(0.16px);
+      border-radius: 0;
+    }
+    span {
+      position: relative;
+      padding-block-end: 1px;
+      max-inline-size: 100%;
+      @include truncate();
+      white-space: pre;
+    }
+
+    :global(.#{$prefix}--form-item) {
+      inline-size: 100%;
+      position: absolute;
+      inset: 0 0;
+      opacity: 0;
+      pointer-events: none;
+
+      input {
+        border: none;
+        border-block-end: 1px solid $border-subtle;
+        color: transparent;
+      }
+      :global(.#{$prefix}--text-input__counter-alert) {
+        display: none;
+      }
+    }
+  }
+
+  button {
+    border: none;
+    background-color: transparent;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: rem(24px);
+    border-radius: $block-radius;
+
+    &:not(:disabled) {
+      cursor: pointer;
+    }
+  }
+
+  &.isEditing {
+    .input {
+      flex: 1;
+      :global(.#{$prefix}--form-item) {
+        pointer-events: all;
+        opacity: 1;
+        input {
+          color: $text-primary;
+        }
+      }
+      span {
+        opacity: 0;
+        pointer-events: none;
+      }
+    }
+  }
+
+  &.isInvalid {
+    button svg {
+      fill: $color-red-50;
+    }
+  }
+}

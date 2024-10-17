@@ -1,0 +1,67 @@
+/**
+ * Copyright 2024 IBM Corp.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@use 'styles/common' as *;
+
+.root {
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
+
+  .placeholder {
+    position: relative;
+    padding: $spacing-04;
+    block-size: rem(106px);
+    inline-size: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-03;
+
+    > svg {
+      flex: 0 0 auto;
+    }
+
+    p {
+      font-size: rem(16px);
+      line-height: rem(18px);
+
+      &.description {
+        font-size: rem(14px);
+        color: $text-secondary;
+      }
+    }
+  }
+
+  :global(.#{$prefix}--file) {
+    position: absolute;
+    inset: 0 0;
+
+    button {
+      font-size: 0;
+      block-size: 100%;
+    }
+  }
+
+  :global(.#{$prefix}--file--label) {
+    @include type-style('label-01');
+    color: $text-secondary;
+  }
+
+  :global(.#{$prefix}--file-browse-btn),
+  :global(.#{$prefix}--file__selected-file) {
+    max-inline-size: unset;
+  }
+}

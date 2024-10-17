@@ -1,0 +1,75 @@
+/**
+ * Copyright 2024 IBM Corp.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@use 'styles/common' as *;
+
+.header {
+  display: grid;
+  grid-template-columns: 1fr max-content;
+}
+
+.heading {
+  font-size: rem(24px);
+  line-height: (36 / 24);
+  font-weight: normal;
+  margin-block-end: $spacing-06;
+  display: flex;
+  gap: $spacing-02;
+
+  :global(.#{$prefix}--skeleton__placeholder) {
+    block-size: rem(36px);
+    inline-size: rem(120px);
+    margin-inline-start: $spacing-04;
+  }
+  :global(.#{$prefix}--dropdown) {
+    > button {
+      background-color: transparent;
+    }
+    :global(.#{$prefix}--list-box__field) {
+      block-size: rem(36px);
+      padding-inline-start: $spacing-02;
+      padding-inline-end: rem(36px);
+      border: none;
+    }
+    :global(.#{$prefix}--list-box__label) {
+      font-size: rem(24px);
+      line-height: (28 / 24);
+      block-size: rem(36px);
+      display: flex;
+      align-items: center;
+      font-weight: 600;
+    }
+    :global(.#{$prefix}--list-box__menu) {
+      min-inline-size: rem(220px);
+    }
+  }
+}
+
+.sharing {
+  display: flex;
+  gap: $spacing-04;
+  align-items: center;
+
+  :global(.#{$prefix}--overflow-menu) {
+    border: 1px solid $border-subtle;
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-08;
+}

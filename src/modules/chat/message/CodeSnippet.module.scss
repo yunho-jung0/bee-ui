@@ -1,0 +1,113 @@
+/**
+ * Copyright 2024 IBM Corp.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@use 'styles/common' as *;
+
+.root {
+  position: relative;
+  border-radius: 8px;
+  min-block-size: rem(48px);
+  max-block-size: rem(88px);
+  display: flex;
+  flex-direction: column;
+  transition: max-block-size $duration-fast-02 motion(standard, productive);
+}
+
+.copyBtnWrapper {
+  position: absolute;
+  inset-block-start: $spacing-03;
+  inset-inline-end: $spacing-03;
+  background-color: $background;
+}
+
+.copyBtn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background-color: $background;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $background-hover;
+  }
+
+  &:active {
+    background-color: $background-active;
+  }
+
+  &:focus {
+    @include focus-outline('outline');
+
+    outline-color: $focus;
+  }
+}
+
+.wrapper {
+  flex: 1;
+  padding: $spacing-05;
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  > code {
+    // we need display block for a resize observer
+    display: block;
+  }
+}
+
+.expandBtnWrapper {
+  position: absolute;
+  inset-block-end: 0;
+  inset-inline-end: 0;
+}
+
+.expandBtn {
+  background-color: $layer;
+  border-end-end-radius: 8px;
+  border-start-start-radius: 8px;
+
+  &:hover {
+    background-color: $layer-hover;
+  }
+
+  &:active {
+    background-color: $layer-active;
+  }
+
+  &:focus {
+    @include focus-outline('outline');
+
+    outline-color: $focus;
+  }
+
+  > :global(.#{$prefix}--btn__icon) {
+    transition: transform $duration-fast-02 motion(standard, productive);
+  }
+}
+
+.root.expanded {
+  max-block-size: none;
+
+  .expandBtn > :global(.#{$prefix}--btn__icon) {
+    transform: rotate(180deg);
+  }
+
+  .wrapper {
+    padding-block-end: rem(48px);
+  }
+}

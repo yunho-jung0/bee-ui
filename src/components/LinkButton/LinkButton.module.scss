@@ -1,0 +1,77 @@
+/**
+ * Copyright 2024 IBM Corp.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@use 'styles/common' as *;
+@use '@carbon/styles/scss/utilities/custom-property';
+
+$link-text-color: custom-property.get-var('link-text-color', $link-primary);
+$link-hover-text-color: custom-property.get-var(
+  'link-hover-text-color',
+  $link-primary-hover
+);
+$link-focus-text-color: custom-property.get-var(
+  'link-focus-text-color',
+  $focus
+);
+
+.root {
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  outline: none;
+  background: none;
+  font: inherit;
+  text-align: start;
+  transition: color $duration-fast-01 motion(standard, productive);
+
+  color: $link-text-color;
+
+  @include type-style(body-01);
+
+  &.size-sm {
+    font-size: rem(12px);
+  }
+  &.size-lg {
+    font-size: rem(16px);
+  }
+
+  &:hover {
+    text-decoration: underline;
+    color: $link-hover-text-color;
+  }
+
+  &:active {
+    text-decoration: underline;
+    color: $link-text-color;
+  }
+
+  &:focus {
+    @include focus-outline;
+    outline-color: $link-focus-text-color;
+    text-decoration: underline;
+  }
+
+  &[disabled] {
+    pointer-events: none;
+    color: $text-disabled;
+  }
+}
+
+.withIcon {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-03;
+}

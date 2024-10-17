@@ -1,0 +1,36 @@
+diff --git a/lib/actions.js b/lib/actions.js
+index 95acf258e470a2220cbf9ef317bff48abe2e7dde..e7e6ecdf993dcd212f89f7a30668b45ed1b54769 100644
+--- a/lib/actions.js
++++ b/lib/actions.js
+@@ -1,6 +1,6 @@
+ import { Auth, raw, skipCSRFCheck, createActionURL } from "@auth/core";
+-import { headers as nextHeaders, cookies } from "next/headers";
+-import { redirect } from "next/navigation";
++import { headers as nextHeaders, cookies } from "next/headers.js";
++import { redirect } from "next/navigation.js";
+ export async function signIn(provider, options = {}, authorizationParams, config) {
+     const headers = new Headers(nextHeaders());
+     const { redirect: shouldRedirect = true, redirectTo, ...rest } = options instanceof FormData ? Object.fromEntries(options) : options;
+diff --git a/lib/env.js b/lib/env.js
+index f7c8b0198b681bd19736e6d69b9178ffb00284ff..6a68d95c7d8bddf950d288948ca3c5185df64082 100644
+--- a/lib/env.js
++++ b/lib/env.js
+@@ -1,4 +1,4 @@
+-import { NextRequest } from "next/server";
++import { NextRequest } from "next/server.js";
+ import { setEnvDefaults as coreSetEnvDefaults } from "@auth/core";
+ /** If `NEXTAUTH_URL` or `AUTH_URL` is defined, override the request's URL. */
+ export function reqWithEnvURL(req) {
+diff --git a/lib/index.js b/lib/index.js
+index b4085490a6fd95d1099a694bd0eace77533632cd..c8984b731cca3a4e8930360393562c89de91e112 100644
+--- a/lib/index.js
++++ b/lib/index.js
+@@ -1,6 +1,6 @@
+ import { Auth, createActionURL } from "@auth/core";
+-import { headers } from "next/headers";
+-import { NextResponse } from "next/server";
++import { headers } from "next/headers.js";
++import { NextResponse } from "next/server.js";
+ import { reqWithEnvURL } from "./env.js";
+ async function getSession(headers, config) {
+     const url = createActionURL("session", 

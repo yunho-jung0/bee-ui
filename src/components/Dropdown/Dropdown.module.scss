@@ -1,0 +1,160 @@
+/**
+ * Copyright 2024 IBM Corp.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@use '../../styles/common' as *;
+
+.root {
+  position: relative;
+}
+
+.dropdown {
+  --cds-layer: var(--cds-field);
+
+  :global(.#{$prefix}--list-box__selection) {
+    display: none;
+  }
+
+  :global(.#{$prefix}--list-box__menu-item) {
+    &:last-child > div > div > div {
+      border-block-end: none;
+    }
+  }
+  :global(.#{$prefix}--list-box__menu-item__option) {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: stretch;
+    border: none;
+    background-color: $background;
+  }
+  :global(.#{$prefix}--list-box__menu-item):hover {
+    background-color: var(--cds-field-hover);
+  }
+
+  :global(.#{$prefix}--list-box__menu-item[disabled]) {
+    &:hover {
+      background-color: transparent;
+    }
+    * {
+      cursor: default;
+    }
+
+    :global(.#{$prefix}--checkbox-label) {
+      padding-inline-start: 0;
+      &:after,
+      &:before {
+        display: none;
+      }
+    }
+  }
+
+  :global(.#{$prefix}--list-box__field--wrapper) {
+    :global(.#{$prefix}--tag) {
+      inline-size: rem(32px);
+      block-size: rem(18px);
+      min-inline-size: 0;
+      min-block-size: 0;
+      display: inline-flex;
+      background: $color-blue-20;
+      color: $color-blue-80;
+      font-size: rem(12px);
+    }
+    :global(.#{$prefix}--tag__close-icon) {
+      display: none;
+    }
+  }
+
+  :global(.#{$prefix}--combo-box) {
+    :global(.#{$prefix}--list-box__field) {
+      padding: 0;
+      input {
+        padding-inline-end: rem(40px);
+      }
+    }
+  }
+}
+
+.option {
+  inline-size: 100%;
+  @include type-style('body-short-01');
+  font-weight: 400;
+  color: $text-primary;
+  letter-spacing: 0.16px;
+  font-size: rem(14px);
+  line-height: 1.28572;
+  padding: 0 $spacing-04;
+  display: flex;
+  align-items: stretch;
+  transition: background-color $duration-fast-01 ease-out;
+
+  &:hover {
+    background-color: $layer-hover;
+  }
+
+  .optionContent {
+    inline-size: 100%;
+    border-block-end: 1px solid $layer-active;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+  .name {
+    display: inline-block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+}
+
+.customOption {
+  padding: 0;
+}
+
+.tooltipContent {
+  background-color: $background;
+  box-shadow: 0px 4px 4px 0px #00000040;
+
+  padding: $spacing-02;
+  border-radius: 4px;
+
+  > div {
+    background-color: $background;
+  }
+
+  pre {
+    @include type-style('code-01');
+    white-space: normal;
+    max-inline-size: 60vw;
+    background-color: $background;
+    color: $text-primary;
+  }
+}
+
+.clearButton {
+  position: absolute;
+  inset-block-end: rem(7px);
+  inset-inline-end: rem(38px);
+  inline-size: rem(30px);
+  block-size: rem(30px);
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background-color: transparent;
+  }
+}

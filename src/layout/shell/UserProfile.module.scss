@@ -1,0 +1,141 @@
+/**
+ * Copyright 2024 IBM Corp.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@use 'styles/common' as *;
+@use '@carbon/styles/scss/utilities/button-reset';
+
+$button-color: $color-blue-70;
+
+.root {
+  inline-size: rem(32px);
+  block-size: rem(32px);
+  :global(.#{$prefix}--popover) {
+    filter: none;
+  }
+  :global(.#{$prefix}--popover-content) {
+    margin-inline-start: rem(20px);
+    margin-block-end: rem(16px);
+    inline-size: rem(224px);
+    box-shadow: $box-shadow;
+    background-color: $layer;
+    border-radius: $spacing-03;
+  }
+}
+
+.button {
+  inline-size: 100%;
+  block-size: 100%;
+  color: $color-white;
+  padding: 0;
+  border: 0;
+  min-block-size: 0;
+  border-radius: 50%;
+
+  &:hover {
+    color: $color-white;
+    > span {
+      background-color: $button-color;
+    }
+  }
+  &:focus-visible {
+    @include focus-outline('outline');
+    outline-offset: 1px;
+  }
+
+  > span {
+    inline-size: 100%;
+    block-size: 100%;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    color: inherit;
+    transition: background-color $duration-fast-02;
+  }
+
+  .settingsIcon {
+    border-radius: 50%;
+    background-color: $button-color;
+    &:hover {
+      background-color: $background-inverse;
+    }
+    svg path {
+      fill: $text-inverse;
+    }
+  }
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  row-gap: $spacing-03;
+}
+
+.user {
+  padding: $spacing-05 $spacing-05 $spacing-02;
+  display: flex;
+  align-items: flex-start;
+  column-gap: $spacing-03;
+}
+
+.userAvatar {
+  flex-shrink: 0;
+}
+
+.userInfo {
+  display: grid;
+  row-gap: $spacing-01;
+}
+
+.userName {
+  @include type-style(label-02);
+  font-weight: bold;
+}
+
+.userEmail {
+  @include type-style(label-01);
+  @include truncate();
+  color: $text-secondary;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  row-gap: $spacing-01;
+}
+
+.link {
+  @include type-style(body-01);
+  padding: rem(6px) $spacing-05;
+  border: 0;
+  background-color: transparent;
+  color: inherit;
+  text-decoration: none;
+  display: flex;
+  inline-size: 100%;
+  cursor: pointer;
+  transition: background-color $duration-fast-02;
+  &:hover {
+    background-color: $border-subtle-01;
+  }
+  &:focus-visible {
+    @include focus-outline('outline');
+  }
+}
+
+.footer {
+  border-block-start: 1px solid $border-subtle;
+  padding-block: $spacing-03;
+}

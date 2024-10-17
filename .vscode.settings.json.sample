@@ -1,0 +1,13 @@
+{
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "css.validate": false,
+  "scss.validate": false,
+  "stylelint.validate": ["css", "scss"],
+  // better tab names for nextjs app router files
+  // thanks Wes Bos https://twitter.com/wesbos/status/1770810934295970105
+  "workbench.editor.customLabels.patterns": {
+    "**/app/**/page.tsx": "${dirname}/page.${extname}",
+    "**/app/**/layout.tsx": "${dirname}/layout.${extname}",
+  }
+}

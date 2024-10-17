@@ -1,0 +1,86 @@
+/**
+ * Copyright 2024 IBM Corp.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@use 'styles/common' as *;
+
+.root {
+  display: grid;
+  grid-template-columns: 1fr max-content;
+  gap: $spacing-04;
+  align-items: flex-end;
+  > button {
+    min-inline-size: rem(122px);
+  }
+}
+
+.selectWrapper {
+  position: relative;
+}
+.select {
+  :global(.#{$prefix}--list-box__menu) {
+    transform: translate(0, $spacing-02);
+  }
+  :global(.#{$prefix}--list-box) {
+    max-block-size: rem(48px);
+    block-size: rem(48px);
+  }
+  :global(.#{$prefix}--list-box__field) {
+    padding-inline-end: 0;
+    block-size: rem(48px);
+    border-color: $border-subtle-00;
+
+    > input {
+      padding-inline-end: rem(140px);
+    }
+  }
+  :global(.#{$prefix}--list-box__selection) {
+    padding-inline-end: 0;
+    inset-inline-end: $spacing-03;
+    &::after {
+      display: none;
+    }
+  }
+  :global(.#{$prefix}--list-box__menu-item) {
+    block-size: rem(62px);
+    align-items: center;
+    display: flex;
+    &[aria-selected='true'] {
+      background-color: $layer-hover-01;
+      outline-color: transparent;
+    }
+  }
+  :global(.#{$prefix}--list-box__menu-item__option) {
+    padding: 0;
+    align-items: center;
+    display: flex;
+    border: none;
+  }
+  :global(.#{$prefix}--list-box__menu-icon) {
+    display: none;
+  }
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: $spacing-03;
+}
+
+.roles {
+  position: absolute;
+  inset-inline-end: $spacing-03;
+  inset-block-end: $spacing-03;
+}

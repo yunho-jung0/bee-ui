@@ -1,0 +1,8 @@
+node_modules/
+.vscode/
+.next/
+.yarn/
+public/
+pnpm-lock.yaml
+*.md
+schema.d.ts

@@ -1,0 +1,75 @@
+/**
+ * Copyright 2024 IBM Corp.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { listThreads } from '@/app/api/threads';
+import { ThreadMetadata } from '@/app/api/threads/types';
+import { decodeMetadata } from '@/app/api/utils';
+import { isNotNull } from '@/utils/helpers';
+import { QueryClient, infiniteQueryOptions } from '@tanstack/react-query';
+
+export const PAGE_SIZE = 20;
+
+export function threadsQuery(projectId: string) {
+  return infiniteQueryOptions({
+    queryKey: ['threads', projectId],
+    queryFn: ({ pageParam }: { pageParam?: string }) =>
+      listThreads(projectId, {
+        limit: PAGE_SIZE,
+        after: pageParam,
+      }),
+    initialPageParam: undefined,
+    getNextPageParam(lastPage) {
+      return lastPage?.has_more && lastPage?.last_id
+        ? lastPage.last_id
+        : undefined;
+    },
+    select(data) {
+      return data.pages
+        .flatMap((page) => page?.data)
+        .filter((item) => {
+          const metadata = decodeMetadata<ThreadMetadata>(item?.metadata);
+          return Boolean(metadata.title);
+        })
+        .filter(isNotNull);
+    },
+    meta: {
+      errorToast: false,
+    },
+  });
+}
+
+export function prefetchThreads(projectId: string, client: QueryClient) {
+  return client.prefetchInfiniteQuery(threadsQuery(projectId));
+}
+
+export function lastThreadQuery(projectId: string) {
+  return {
+    queryKey: ['threads', 'last', projectId],
+    queryFn: () =>
+      listThreads(projectId, {
+        limit: 1,
+        order: 'desc',
+        order_by: 'created_at',
+      }),
+    staleTime: 60 * 60 * 1000,
+    meta: {
+      errorToast: {
+        title: 'Failed to read last session',
+        includeErrorMessage: true,
+      },
+    },
+  };
+}

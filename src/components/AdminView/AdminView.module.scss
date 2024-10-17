@@ -1,0 +1,56 @@
+/**
+ * Copyright 2024 IBM Corp.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@use 'styles/common' as *;
+
+.root {
+  padding-block-start: $spacing-12;
+  padding-block-end: $spacing-10;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  block-size: 100vh;
+  :global(.#{$prefix}--tabs) {
+    margin-block-end: $spacing-08;
+  }
+}
+
+.heading {
+  font-size: rem(24px);
+  line-height: (28 / 24);
+  font-weight: 600;
+  margin-block-end: $spacing-06;
+}
+
+.description {
+  @include type-style('body-01');
+  max-inline-size: rem(780px);
+}
+
+.searchBar {
+  display: flex;
+  column-gap: $spacing-06;
+  margin-block: $spacing-08;
+  justify-content: flex-end;
+}
+
+.newButton {
+  align-items: center;
+  column-gap: $spacing-07;
+  padding-inline-end: rem(15px);
+  border-radius: $spacing-03;
+  min-inline-size: rem(175px);
+}

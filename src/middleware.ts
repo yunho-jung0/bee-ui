@@ -1,0 +1,74 @@
+/**
+ * Copyright 2024 IBM Corp.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { ACCEPT_TOU_PAGE, auth, SIGN_IN_PAGE } from '@/app/auth';
+import { NextMiddleware, NextResponse } from 'next/server';
+import { v4 as uuid } from 'uuid';
+
+const DUMMY_JWT_TOKEN = process.env.DUMMY_JWT_TOKEN!;
+
+const middleware: NextMiddleware = (...args) => {
+  const [request, ev] = args;
+
+  const correlationId = uuid();
+
+  const onEnd = () => {
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set('x-correlation-id', correlationId);
+    return NextResponse.next({ request: { headers: requestHeaders } });
+  };
+
+  // For protected pages run an next-auth middleware too
+  if (!DUMMY_JWT_TOKEN && protectedPages.test(request.nextUrl.pathname)) {
+    return auth((req) => {
+      const session = req.auth;
+      // If there's some problem in the auth middleware, sadly instead of throwing
+      // or returning the 500 response, it continues with a session as string with http status :(
+      if (!session || typeof session !== 'object') {
+        const { pathname, search, origin, basePath } = req.nextUrl;
+        const redirectUrl = new URL(`${basePath}${SIGN_IN_PAGE}`, origin);
+        redirectUrl.searchParams.set(
+          'callbackUrl',
+          `${basePath}${pathname}${search}`,
+        );
+        return NextResponse.redirect(redirectUrl);
+      } else {
+        // check if tou accepted
+        if (!Boolean(session.userProfile.metadata?.tou_accepted_at)) {
+          const { pathname, search, origin, basePath } = req.nextUrl;
+          const redirectUrl = new URL(`${basePath}${ACCEPT_TOU_PAGE}`, origin);
+          redirectUrl.searchParams.set(
+            'callbackUrl',
+            `${basePath}${pathname}${search}`,
+          );
+          return NextResponse.redirect(redirectUrl);
+        }
+      }
+      return onEnd();
+    })(request as any, ev as any);
+  } else {
+    return onEnd();
+  }
+};
+
+export default middleware;
+
+export const protectedPages = /^(?!\/auth(\/|$)|\/api(\/|$)).*$/; // all pages except /auth or /api
+
+export const config = {
+  // ignore _next/static, _next/image and any url with an extension, which are files in public folder
+  matcher: ['/((?!_next/static|_next/image|.*\\..*).*)'],
+};

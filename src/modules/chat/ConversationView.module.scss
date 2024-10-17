@@ -1,0 +1,75 @@
+/**
+ * Copyright 2024 IBM Corp.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@use 'styles/common' as *;
+
+.root {
+  display: flex;
+  flex-direction: column;
+  block-size: 100%;
+}
+
+.content {
+  flex: 1;
+  min-block-size: 0;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  max-block-size: 100%;
+  display: flex;
+  flex-direction: column-reverse;
+  position: relative;
+  scrollbar-gutter: stable;
+  padding-block-start: rem(84px);
+}
+
+.bottom {
+  position: relative;
+}
+
+.bottomHolder {
+  padding-block-start: $spacing-06;
+  padding-block-end: $spacing-07;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+.toBottomButton {
+  &:global(.#{$prefix}--tooltip) {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+  }
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  padding-block-start: $spacing-07;
+  padding-block-end: $spacing-03;
+}
+
+.deletedAppBanner {
+  background-color: $layer-02;
+  block-size: rem(66px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @include type-style('body-01');
+  color: $text-secondary;
+  margin-block-start: $spacing-05;
+}

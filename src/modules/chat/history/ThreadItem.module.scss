@@ -1,0 +1,155 @@
+/**
+ * Copyright 2024 IBM Corp.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@use 'styles/common' as *;
+
+.root {
+  display: flex;
+  flex-direction: column;
+  row-gap: $spacing-02;
+  padding-block: $spacing-04;
+  padding-inline-start: $spacing-04;
+  padding-inline-end: $spacing-03;
+  position: relative;
+  z-index: 0;
+  &.isDeletePending {
+    @include is-deleting();
+  }
+}
+
+.wrapper {
+  display: flex;
+  align-items: center;
+  column-gap: $spacing-03;
+}
+
+.heading,
+.subheading {
+  &:global(.#{$prefix}--skeleton__text) {
+    block-size: 1em;
+  }
+}
+
+.heading {
+  @include type-style(label-02);
+  line-height: rem(16px);
+  color: $text-dark;
+  display: flex;
+  column-gap: $spacing-02;
+  min-inline-size: 0;
+  flex-grow: 1;
+  svg {
+    flex-shrink: 0;
+  }
+  .error & svg {
+    color: $text-error;
+  }
+
+  &:global(.#{$prefix}--skeleton__text) {
+    margin-block-end: $spacing-01;
+  }
+}
+
+.options {
+  flex-shrink: 0;
+  display: none;
+  margin-block: rem(-1px);
+  .root.focusWithin &,
+  .root:hover &,
+  .root:focus-within & {
+    display: block;
+  }
+
+  :global(.#{$prefix}--btn) {
+    &:hover,
+    &:focus {
+      background-color: $layer;
+    }
+  }
+
+  :global(.#{$prefix}--popover) {
+    display: none;
+  }
+}
+
+.skeleton,
+.link {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-01;
+}
+.link {
+  @include link-mask();
+  flex-grow: 1;
+  color: inherit;
+  text-decoration: none;
+  min-inline-size: 0;
+
+  &::before {
+    border-radius: $spacing-03;
+    z-index: -1;
+  }
+  &:focus {
+    outline: none;
+  }
+  &:focus-visible::before {
+    @include focus-outline('outline');
+  }
+  .root.focusWithin &:not(.active)::before,
+  .root:hover &:not(.active)::before {
+    opacity: 0.5;
+  }
+  .root.focusWithin &::before,
+  .root:hover &::before,
+  &.active::before {
+    background-color: $border-subtle-01;
+  }
+
+  > span {
+    @include truncate();
+  }
+}
+
+.subheading {
+  @include type-style(label-01);
+  line-height: 1;
+  color: $text-placeholder;
+
+  &:global(.#{$prefix}--skeleton__text) {
+    margin-block-end: 0;
+  }
+}
+
+.truncate {
+  @include truncate();
+}
+
+.retryButton {
+  margin-block-start: $spacing-02;
+}
+
+.titleInput {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  :global(.#{$prefix}--text-input__field-wrapper),
+  :global(.#{$prefix}--text-input) {
+    block-size: 100%;
+  }
+  :global(.#{$prefix}--text-input) {
+    background-color: $layer;
+  }
+}

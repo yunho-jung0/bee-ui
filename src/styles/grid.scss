@@ -1,0 +1,69 @@
+/**
+ * Copyright 2024 IBM Corp.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@use '@carbon/grid' as *;
+@use 'sass:map';
+
+// Unfortunately carbon doesn't offer a way how to emit only css variables without
+// the classes
+
+@mixin emit-grid-tokens($breakpoints: $grid-breakpoints) {
+  --grid-gutter: #{$grid-gutter};
+
+  // Iterate through the grid breakpoints and only emit the grid-columns and
+  // grid-margin CSS Custom Properties if they've changed from the previous
+  // breakpoint. By default, we emit the smallest breakpoint values on the
+  // :root selector
+  @each $key, $value in $breakpoints {
+    @if is-smallest-breakpoint($key, $breakpoints) {
+      --grid-columns: #{get-column-count($breakpoints, $key)};
+      --grid-margin: #{get-margin($breakpoints, $key)};
+    } @else {
+      $previous-breakpoint: breakpoint-prev($key, $breakpoints);
+      $changes: ();
+
+      @if get-column-count($breakpoints, $key) !=
+        get-column-count($breakpoints, $previous-breakpoint)
+      {
+        $changes: map.set(
+          $changes,
+          grid-columns,
+          get-column-count($breakpoints, $key)
+        );
+      }
+
+      @if get-margin($breakpoints, $key) !=
+        get-margin($breakpoints, $previous-breakpoint)
+      {
+        $changes: map.set(
+          $changes,
+          grid-margin,
+          get-margin($breakpoints, $key)
+        );
+      }
+
+      @include breakpoint($key) {
+        @each $name, $value in $changes {
+          --#{$name}: #{$value};
+        }
+      }
+    }
+  }
+}
+
+:root {
+  @include emit-grid-tokens;
+}
