@@ -26,13 +26,19 @@ import {
   isMessageCompletedEventResponse,
   isMessageCreatedEventResponse,
   isMessageDeltaEventResponse,
+  isRequiredActionToolApprovals,
   isRequiredActionToolOutput,
   isRunEventResponse,
   isStepDeltaEventResponse,
   isStepEventResponse,
 } from '@/app/api/threads-runs/utils';
-import { SubmitToolOutput, SubmitToolOutputsBody } from '@/app/api/tools/types';
 import {
+  SubmitToolApprovalsBody,
+  SubmitToolOutput,
+  SubmitToolOutputsBody,
+} from '@/app/api/tools/types';
+import {
+  decodeMetadata,
   getProjectHeaders,
   handleFailedResponse,
   maybeGetJsonBody,
@@ -46,53 +52,74 @@ import {
   EventStreamContentType,
   fetchEventSource,
 } from '@ai-zen/node-fetch-event-source';
-import { MutableRefObject } from 'react';
+import { MutableRefObject, RefObject } from 'react';
 import {
   updatePlanWithRunStep,
   updatePlanWithRunStepDelta,
 } from '../assistant-plan/utils';
-import { ChatStatus } from '../providers/ChatProvider';
-import { ChatMessage } from '../types';
+import { ChatMessage, ToolApprovalValue } from '../types';
 import { isBotMessage } from '../utils';
+import { useQueryClient } from '@tanstack/react-query';
+import { readRunQuery } from '../queries';
+import { Thread, ThreadMetadata } from '@/app/api/threads/types';
+import { getToolApprovalId } from '@/modules/tools/utils';
+import { useAppContext } from '@/layout/providers/AppProvider';
+import { RunController } from '../providers/ChatProvider';
 
 interface ChatStreamParams {
-  projectId: string;
-  threadId: string;
-  runIdRef: MutableRefObject<string | null>;
-  body: RunsCreateBody | SubmitToolOutputsBody;
-  abortController: AbortController;
-  setStatus: (status: ChatStatus) => void;
-  setMessages: Updater<ChatMessage[]>;
+  action:
+    | { id: 'create-run'; body: RunsCreateBody }
+    | {
+        id: 'process-approval';
+        requiredAction: RequiredActionToolApprovals;
+        approve: boolean;
+      };
   onMessageCompleted: (response: MessageCompletedEventResponse) => void;
 }
 
-export function useChatStream() {
-  async function chatStream({
-    projectId,
-    threadId,
-    runIdRef,
-    body,
-    abortController,
-    setStatus,
-    setMessages,
-    onMessageCompleted,
-  }: ChatStreamParams) {
-    let callsQueue: Promise<void>[] = [
-      fetchEventStream({
-        url: `/api/v1/threads/${threadId}/runs`,
-        projectId,
-        body,
-        abortController,
-        setMessages,
-        handleRunEventResponse,
-      }),
-    ];
+interface Props {
+  threadRef: RefObject<Thread>;
+  controllerRef: RefObject<RunController>;
+  onToolApprovalSubmitRef: MutableRefObject<
+    ((value: ToolApprovalValue) => void) | null
+  >;
+  setMessages: Updater<ChatMessage[]>;
+  updateController: (data: Partial<RunController>) => void;
+}
 
-    const processToolOutput = async (
-      runId: string,
-      action: RequiredActionToolOutput,
-    ) => {
-      setStatus('waiting');
+export function useChatStream({
+  threadRef,
+  controllerRef,
+  onToolApprovalSubmitRef,
+  setMessages,
+  updateController,
+}: Props) {
+  const queryClient = useQueryClient();
+  const { project } = useAppContext();
+
+  const getThread = () => {
+    const thread = threadRef.current;
+    if (!thread) {
+      throw Error('Thread is not defined!');
+    }
+    return thread;
+  };
+
+  const getRunId = () => {
+    const runId = controllerRef.current?.runId;
+    if (!runId) {
+      throw Error('Run is not defined!');
+    }
+    return runId;
+  };
+
+  async function chatStream({ action, onMessageCompleted }: ChatStreamParams) {
+    const abortController = controllerRef.current?.abortController ?? null;
+
+    const requestToolOutput = async (action: RequiredActionToolOutput) => {
+      updateController({ status: 'waiting' });
+
+      const runId = getRunId();
 
       const functionToolCalls = action.submit_tool_outputs.tool_calls.filter(
         (toolCall) => toolCall.type === 'function',
@@ -113,65 +140,86 @@ export function useChatStream() {
         }) ?? [],
       );
 
-      setStatus('fetching');
+      updateController({ status: 'fetching' });
 
       await fetchEventStream({
-        url: `/api/v1/threads/${threadId}/runs/${runId}/submit_tool_outputs`,
+        url: `/api/v1/threads/${getThread()?.id}/runs/${runId}/submit_tool_outputs`,
         body: {
           tool_outputs: outputs,
         },
-        projectId,
+        projectId: project.id,
         abortController,
         setMessages,
         handleRunEventResponse,
       });
     };
 
-    // const processToolApprovals = async (
-    //   runId: string,
-    //   action: RequiredActionToolApprovals,
-    // ) => {
-    //   setStatus('waiting');
+    const requestToolApprovals = async (
+      action: RequiredActionToolApprovals,
+    ) => {
+      updateController({ status: 'waiting' });
 
-    //   console.log(action);
+      const thread = getThread();
+      const runId = getRunId();
 
-    //   const functionToolCalls = action.submit_tool_outputs.tool_calls.filter(
-    //     (toolCall) => toolCall.type === 'function',
-    //   );
+      const toolApproval = action.submit_tool_approvals.tool_calls.at(0);
+      if (!toolApproval) return;
 
-    //   const outputs: SubmitToolOutput[] = await Promise.all(
-    //     functionToolCalls?.map(async (toolCall) => {
-    //       let output = '';
+      const toolId = getToolApprovalId(toolApproval);
+      const { approvedTools } = decodeMetadata<ThreadMetadata>(thread.metadata);
 
-    //       if (toolCall.function.name === FunctionTool.UserCoordinates) {
-    //         output = await getUserLocation();
-    //       }
+      let approve = toolId && approvedTools?.includes(toolId);
+      if (!approve) {
+        queryClient.setQueryData(
+          readRunQuery(project.id, thread.id, runId).queryKey,
+          (run) => (run ? { ...run, required_action: action } : undefined),
+        );
+        queryClient.invalidateQueries({
+          queryKey: readRunQuery(project.id, thread.id, getRunId()).queryKey,
+        });
 
-    //       return {
-    //         tool_call_id: toolCall.id,
-    //         output,
-    //       };
-    //     }) ?? [],
-    //   );
+        const waitForApproval = new Promise<ToolApprovalValue>((resolve) => {
+          onToolApprovalSubmitRef.current = resolve;
+        });
 
-    //   setStatus('fetching');
+        approve = (await waitForApproval) !== 'decline';
+      }
 
-    //   await fetchEventStream({
-    //     url: `/api/v1/threads/${threadId}/runs/${runId}/submit_tool_approvals`,
-    //     body: {
-    //       tool_approvals: [],
-    //     },
-    //     projectId,
-    //     abortController,
-    //     setMessages,
-    //     handleRunEventResponse,
-    //   });
-    // };
+      await processToolApprovals(action, approve);
+    };
+
+    const processToolApprovals = async (
+      action: RequiredActionToolApprovals,
+      approve: boolean,
+    ) => {
+      const thread = getThread();
+      const runId = getRunId();
+      const toolApproval = action.submit_tool_approvals.tool_calls.at(0);
+      if (!toolApproval) return;
+
+      updateController({ status: 'fetching' });
+
+      await fetchEventStream({
+        url: `/api/v1/threads/${thread.id}/runs/${runId}/submit_tool_approvals`,
+        body: {
+          tool_approvals: [
+            {
+              tool_call_id: toolApproval.id,
+              approve,
+            },
+          ],
+        },
+        projectId: project.id,
+        abortController,
+        setMessages,
+        handleRunEventResponse,
+      });
+    };
 
     async function handleRunEventResponse(response: RunsCreateResponse) {
       if (response.event === 'thread.run.created') {
         const runId = response.data?.id;
-        runIdRef.current = runId ?? null;
+        if (runId) updateController({ runId });
 
         setMessages((messages) => {
           const message = messages.at(-1);
@@ -227,14 +275,27 @@ export function useChatStream() {
       } else if (
         isRunEventResponse(response) &&
         response.event === 'thread.run.requires_action' &&
-        response.data &&
-        isRequiredActionToolOutput(response.data?.required_action)
+        response.data
       ) {
-        callsQueue.push(
-          processToolOutput(response.data.id, response.data.required_action),
-        );
+        if (isRequiredActionToolOutput(response.data?.required_action))
+          callsQueue.push(requestToolOutput(response.data.required_action));
+        else if (isRequiredActionToolApprovals(response.data?.required_action))
+          callsQueue.push(requestToolApprovals(response.data.required_action));
       }
     }
+
+    const callsQueue: Promise<void>[] = [
+      action.id === 'create-run'
+        ? fetchEventStream({
+            url: `/api/v1/threads/${getThread().id}/runs`,
+            projectId: project.id,
+            body: action.body,
+            abortController,
+            setMessages,
+            handleRunEventResponse,
+          })
+        : processToolApprovals(action.requiredAction, action.approve),
+    ];
 
     while (callsQueue.length) {
       const nextCall = callsQueue.shift();
@@ -258,8 +319,8 @@ async function fetchEventStream({
   projectId: string;
   url: string;
   handleRunEventResponse: (response: RunsCreateResponse) => void;
-  body: RunsCreateBody | SubmitToolOutputsBody;
-  abortController: AbortController;
+  body: RunsCreateBody | SubmitToolOutputsBody | SubmitToolApprovalsBody;
+  abortController: AbortController | null;
   setMessages: Updater<ChatMessage[]>;
 }) {
   await fetchEventSource(url, {
@@ -269,7 +330,7 @@ async function fetchEventStream({
       ...getProjectHeaders(projectId),
     },
     body: JSON.stringify({ ...body, stream: true }),
-    signal: abortController.signal,
+    signal: abortController?.signal,
     openWhenHidden: true,
     async onopen(response) {
       if (!response.ok) {
