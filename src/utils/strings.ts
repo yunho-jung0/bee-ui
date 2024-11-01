@@ -14,24 +14,22 @@
  * limitations under the License.
  */
 
-@use 'styles/common' as *;
-
-.root {
-  position: relative;
-  code {
-    @include type-style(body-01);
-    display: block;
-  }
-  .content {
-    white-space: pre-wrap;
-    word-break: break-word;
-    background-color: $layer-02;
-    padding: $spacing-05 rem(52px) $spacing-05 $spacing-05;
-  }
+export function capitalizeFirstLetter(message: string) {
+  return message.charAt(0).toUpperCase() + message.slice(1);
 }
 
-.button {
-  position: absolute;
-  inset-block-start: rem(10px);
-  inset-inline-end: rem(10px);
+export function truncateCenter(
+  string: string,
+  maxLength: number,
+  separator: string = '...',
+) {
+  if (!string || string.length <= maxLength) return string;
+
+  const partLength = Math.floor((maxLength - separator.length) / 2);
+
+  return (
+    string.substring(0, partLength) +
+    separator +
+    string.substring(string.length - partLength)
+  );
 }

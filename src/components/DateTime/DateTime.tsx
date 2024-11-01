@@ -14,24 +14,30 @@
  * limitations under the License.
  */
 
-@use 'styles/common' as *;
+import { getLocaleDateString } from '@/utils/dates';
 
-.root {
-  position: relative;
-  code {
-    @include type-style(body-01);
-    display: block;
-  }
-  .content {
-    white-space: pre-wrap;
-    word-break: break-word;
-    background-color: $layer-02;
-    padding: $spacing-05 rem(52px) $spacing-05 $spacing-05;
-  }
+interface Props {
+  date: number | string;
+  type?: 'long' | 'short';
+  options?: Intl.DateTimeFormatOptions;
 }
 
-.button {
-  position: absolute;
-  inset-block-start: rem(10px);
-  inset-inline-end: rem(10px);
+export function DateTime({ date, type = 'short', options }: Props) {
+  return (
+    <time dateTime={getLocaleDateString(date)}>
+      {getLocaleDateString(
+        date,
+        undefined,
+        options
+          ? options
+          : type === 'short'
+            ? {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+              }
+            : undefined,
+      )}
+    </time>
+  );
 }
