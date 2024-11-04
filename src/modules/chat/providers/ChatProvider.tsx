@@ -61,6 +61,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import { v4 as uuid } from 'uuid';
 import { threadQuery, threadsQuery } from '../history/queries';
 import { THREAD_TITLE_MAX_LENGTH } from '../history/ThreadItem';
 import { useGetThreadAssistant } from '../history/useGetThreadAssistant';
@@ -414,6 +415,7 @@ export function ChatProvider({
             setMessages((messages) => {
               if (messages.at(-1)?.role !== 'assistant')
                 messages.push({
+                  key: uuid(),
                   role: 'assistant',
                   content: '',
                   pending: false,
@@ -512,6 +514,7 @@ export function ChatProvider({
 
       function handleCreateChatMessages(): UserChatMessage {
         const userMessage: UserChatMessage = {
+          key: uuid(),
           role: 'user',
           content: input,
           attachments,
@@ -530,6 +533,7 @@ export function ChatProvider({
             messages.push(userMessage);
           }
           messages.push({
+            key: uuid(),
             role: 'assistant',
             content: '',
             pending: true,
@@ -611,6 +615,7 @@ export function ChatProvider({
       };
     },
     [
+      queryClient,
       controllerRef,
       setController,
       handleCancelCurrentRun,
