@@ -15,7 +15,13 @@
  */
 
 'use client';
-import classes from './ApiKeysHome.module.scss';
+import { DateTime } from '@/components/DateTime/DateTime';
+import { InlineEditableField } from '@/components/InlineEditableField/InlineEditableField';
+import { Tooltip } from '@/components/Tooltip/Tooltip';
+import { useFetchNextPageInView } from '@/hooks/useFetchNextPageInView';
+import { useAppContext } from '@/layout/providers/AppProvider';
+import { useModal } from '@/layout/providers/ModalProvider';
+import { truncateCenter } from '@/utils/strings';
 import {
   Button,
   DataTable,
@@ -33,32 +39,21 @@ import {
   TableToolbarSearch,
 } from '@carbon/react';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { useAppContext } from '@/layout/providers/AppProvider';
-import { apiKeysQuery } from './api/queries';
 import { useId, useMemo } from 'react';
+import { useDebounceValue } from 'usehooks-ts';
 import {
   PreferencesLayout,
   PreferencesSection,
 } from '../preferences/PreferencesLayout';
-import { useModal } from '@/layout/providers/ModalProvider';
-import { ApiKeyModal } from './manage/ApiKeyModal';
-import {
-  UserProfileProvider,
-  useUserProfile,
-} from '../chat/providers/UserProfileProvider';
-import { InlineEditableField } from '@/components/InlineEditableField/InlineEditableField';
+import { apiKeysQuery } from './api/queries';
 import { useRenameApiKey } from './api/useRenameApiKey';
-import { truncateCenter } from '@/utils/strings';
-import { useDebounceValue } from 'usehooks-ts';
-import { useFetchNextPageInView } from '@/hooks/useFetchNextPageInView';
-import { DateTime } from '@/components/DateTime/DateTime';
-import { Tooltip } from '@/components/Tooltip/Tooltip';
+import classes from './ApiKeysHome.module.scss';
+import { ApiKeyModal } from './manage/ApiKeyModal';
 
 export function ApiKeysHome() {
   const id = useId();
   const { project } = useAppContext();
   const { openModal } = useModal();
-  const userProfileValue = useUserProfile();
   const [search, setSearch] = useDebounceValue('', 200);
 
   const { data, isPending, fetchNextPage, isFetching, hasNextPage } =
@@ -162,9 +157,7 @@ export function ApiKeysHome() {
                       kind="secondary"
                       onClick={() =>
                         openModal((props) => (
-                          <UserProfileProvider value={userProfileValue}>
-                            <ApiKeyModal {...props} project={project} />
-                          </UserProfileProvider>
+                          <ApiKeyModal {...props} project={project} />
                         ))
                       }
                     >

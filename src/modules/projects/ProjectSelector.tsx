@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
+import { Project, ProjectsListQuery } from '@/app/api/projects/types';
 import { Dropdown } from '@/components/Dropdown/Dropdown';
+import { useAppContext } from '@/layout/providers/AppProvider';
 import { useModal } from '@/layout/providers/ModalProvider';
 import { Button, SkeletonPlaceholder, Tag } from '@carbon/react';
-import classes from './ProjectSelector.module.scss';
-import { useAppContext } from '@/layout/providers/AppProvider';
-import { Project, ProjectsListQuery } from '@/app/api/projects/types';
 import { Add } from '@carbon/react/icons';
 import { useRouter } from 'next-nprogress-bar';
 import { useMemo } from 'react';
-import { CreateProjectModal } from './manage/CreateProjectModal';
 import { useProjects } from './hooks/useProjects';
+import { CreateProjectModal } from './manage/CreateProjectModal';
+import classes from './ProjectSelector.module.scss';
 import { ProjectWithScope } from './types';
 
 interface Props {

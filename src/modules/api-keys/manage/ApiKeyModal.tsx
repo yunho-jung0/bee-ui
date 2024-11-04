@@ -14,9 +14,16 @@
  * limitations under the License.
  */
 
+import { createApiKey } from '@/app/api/api-keys';
+import { ApiKey } from '@/app/api/api-keys/types';
+import { Project } from '@/app/api/projects/types';
 import { Modal } from '@/components/Modal/Modal';
 import { SettingsFormGroup } from '@/components/SettingsFormGroup/SettingsFormGroup';
+import { TextWithCopyButton } from '@/components/TextWithCopyButton/TextWithCopyButton';
+import { useOnMount } from '@/hooks/useOnMount';
 import { ModalProps, useModal } from '@/layout/providers/ModalProvider';
+import { useProjects } from '@/modules/projects/hooks/useProjects';
+import { ProjectWithScope } from '@/modules/projects/types';
 import {
   Button,
   ComboBox,
@@ -29,20 +36,13 @@ import {
   TextInput,
 } from '@carbon/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import clsx from 'clsx';
 import { useCallback, useEffect, useId } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import classes from './ApiKeyModal.module.scss';
-import { Project } from '@/app/api/projects/types';
-import { ApiKey } from '@/app/api/api-keys/types';
 import { apiKeysQuery } from '../api/queries';
-import { createApiKey } from '@/app/api/api-keys';
-import { useProjects } from '@/modules/projects/hooks/useProjects';
-import { TextWithCopyButton } from '@/components/TextWithCopyButton/TextWithCopyButton';
 import { useDeleteApiKey } from '../api/useDeleteApiKey';
 import { useRegenerateApiKey } from '../api/useRegenerateApiKey';
-import { ProjectWithScope } from '@/modules/projects/types';
-import { useOnMount } from '@/hooks/useOnMount';
-import clsx from 'clsx';
+import classes from './ApiKeyModal.module.scss';
 
 interface FormValues {
   name: string;

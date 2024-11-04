@@ -15,16 +15,16 @@
  */
 
 import { ProjectsListQuery } from '@/app/api/projects/types';
-import { useInfiniteQuery, useQueries } from '@tanstack/react-query';
-import { projectsQuery } from '../queries';
-import { useEffect, useMemo } from 'react';
 import { MAX_API_FETCH_LIMIT } from '@/app/api/utils';
-import { readProjectUserQuery } from '../users/queries';
-import { useUserProfile } from '@/modules/chat/providers/UserProfileProvider';
+import { useUserProfile } from '@/store/user-profile';
+import { useInfiniteQuery, useQueries } from '@tanstack/react-query';
+import { useEffect, useMemo } from 'react';
+import { projectsQuery } from '../queries';
 import { ProjectWithScope } from '../types';
+import { readProjectUserQuery } from '../users/queries';
 
 export function useProjects({ withRole }: { withRole?: boolean }) {
-  const { id: userId } = useUserProfile();
+  const userId = useUserProfile((state) => state.id);
 
   const query = useInfiniteQuery(projectsQuery(PROJECTS_QUERY_PARAMS));
 
