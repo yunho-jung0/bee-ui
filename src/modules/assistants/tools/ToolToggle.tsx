@@ -17,7 +17,6 @@
 import { ToolReference } from '@/app/api/tools/types';
 import { LineClampText } from '@/components/LineClampText/LineClampText';
 import { LinkButton } from '@/components/LinkButton/LinkButton';
-import { useAppContext } from '@/layout/providers/AppProvider';
 import { getToolReferenceId, isExternalTool } from '@/modules/tools/utils';
 import {
   SkeletonIcon,
@@ -27,11 +26,9 @@ import {
   ToggleProps,
   Tooltip,
 } from '@carbon/react';
-import { useQuery } from '@tanstack/react-query';
 import { MouseEventHandler, useId } from 'react';
 import classes from './ToolToggle.module.scss';
 import { ToolDescription } from '@/modules/tools/ToolCard';
-import { readToolQuery } from '@/modules/tools/queries';
 import { useToolInfo } from '@/modules/tools/hooks/useToolInfo';
 
 interface Props extends Omit<ToggleProps, 'id' | 'size'> {
