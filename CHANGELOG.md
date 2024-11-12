@@ -1,5 +1,10 @@
 # Changelog
 
+## <small>0.0.5 (2024-11-12)</small>
+
+* fix: theme flickering during load (#58) ([502ae3c](https://github.com/i-am-bee/bee-ui/commit/502ae3c)), closes [#58](https://github.com/i-am-bee/bee-ui/issues/58)
+* fix(tools): display correct name and icon (#61) ([8c37a0e](https://github.com/i-am-bee/bee-ui/commit/8c37a0e)), closes [#61](https://github.com/i-am-bee/bee-ui/issues/61)
+
 ## <small>0.0.4 (2024-11-08)</small>
 
 * fix(chat): past errored message should not have retry button (#57) ([31cbe08](https://github.com/i-am-bee/bee-ui/commit/31cbe08)), closes [#57](https://github.com/i-am-bee/bee-ui/issues/57)
