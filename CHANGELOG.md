@@ -1,5 +1,20 @@
 # Changelog
 
+## <small>0.0.6 (2024-11-13)</small>
+
+* fix: sass imports (#72) ([43589bc](https://github.com/i-am-bee/bee-ui/commit/43589bc)), closes [#72](https://github.com/i-am-bee/bee-ui/issues/72)
+* fix: theme flickering during load (#58) ([502ae3c](https://github.com/i-am-bee/bee-ui/commit/502ae3c)), closes [#58](https://github.com/i-am-bee/bee-ui/issues/58)
+* fix(assistant-builder): hidden sidebar after 'launch in chat' click (#71) ([f2d35f4](https://github.com/i-am-bee/bee-ui/commit/f2d35f4)), closes [#71](https://github.com/i-am-bee/bee-ui/issues/71)
+* fix(assistants): delete button disabled in read-only project (#65) ([9b3b385](https://github.com/i-am-bee/bee-ui/commit/9b3b385)), closes [#65](https://github.com/i-am-bee/bee-ui/issues/65)
+* fix(files): bump dropzone to recognize md files (#70) ([a8e82a9](https://github.com/i-am-bee/bee-ui/commit/a8e82a9)), closes [#70](https://github.com/i-am-bee/bee-ui/issues/70)
+* fix(tools): display correct name and icon (#61) ([8c37a0e](https://github.com/i-am-bee/bee-ui/commit/8c37a0e)), closes [#61](https://github.com/i-am-bee/bee-ui/issues/61)
+* fix(tools): user tools approval ([c442992](https://github.com/i-am-bee/bee-ui/commit/c442992))
+* feat(assistant-builder): qa, improvements (#66) ([f7144d3](https://github.com/i-am-bee/bee-ui/commit/f7144d3)), closes [#66](https://github.com/i-am-bee/bee-ui/issues/66)
+* feat(assistants): initial split screen builder (#60) ([c7ca18a](https://github.com/i-am-bee/bee-ui/commit/c7ca18a)), closes [#60](https://github.com/i-am-bee/bee-ui/issues/60)
+* feat(extraction): extend accepted file types (#67) ([24064b1](https://github.com/i-am-bee/bee-ui/commit/24064b1)), closes [#67](https://github.com/i-am-bee/bee-ui/issues/67)
+* feat(tools): show tool tags with tool types ([314d2d4](https://github.com/i-am-bee/bee-ui/commit/314d2d4))
+* feat(tou): do not block the submit button during animation (#62) ([30f71c5](https://github.com/i-am-bee/bee-ui/commit/30f71c5)), closes [#62](https://github.com/i-am-bee/bee-ui/issues/62)
+
 ## <small>0.0.4 (2024-11-08)</small>
 
 * fix(chat): past errored message should not have retry button (#57) ([31cbe08](https://github.com/i-am-bee/bee-ui/commit/31cbe08)), closes [#57](https://github.com/i-am-bee/bee-ui/issues/57)
