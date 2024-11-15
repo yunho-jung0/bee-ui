@@ -14,12 +14,23 @@
  * limitations under the License.
  */
 
-export const ORGANIZATION_ID_DEFAULT =
-  process.env.NEXT_PUBLIC_ORGANIZATION_ID_DEFAULT!;
-export const PROJECT_ID_DEFAULT = process.env.NEXT_PUBLIC_PROJECT_ID_DEFAULT!;
+@use 'styles/common' as *;
 
-export const TOU_TEXT = process.env.NEXT_PUBLIC_TOU_TEXT!;
-export const PRIVACY_URL = process.env.NEXT_PUBLIC_PRIVACY_URL!;
-export const DOCUMENTATION_URL = process.env.NEXT_PUBLIC_DOCUMENTATION_URL!;
+.body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  block-size: 100%;
+  row-gap: $spacing-04;
+}
 
-export const ONBOARDING_PARAM = 'onboarding';
+.illustration {
+  display: flex;
+  margin: auto;
+  color: $border-subtle-00;
+  padding-block-end: $spacing-04;
+  svg {
+    inline-size: rem(64px);
+    block-size: rem(64px);
+  }
+}

@@ -14,12 +14,28 @@
  * limitations under the License.
  */
 
-export const ORGANIZATION_ID_DEFAULT =
-  process.env.NEXT_PUBLIC_ORGANIZATION_ID_DEFAULT!;
-export const PROJECT_ID_DEFAULT = process.env.NEXT_PUBLIC_PROJECT_ID_DEFAULT!;
+import { VectorStore } from '@/app/api/vector-stores/types';
+import { useAppContext } from '@/layout/providers/AppProvider';
+import { useQuery } from '@tanstack/react-query';
+import { readVectorStoreQuery } from '../queries';
 
-export const TOU_TEXT = process.env.NEXT_PUBLIC_TOU_TEXT!;
-export const PRIVACY_URL = process.env.NEXT_PUBLIC_PRIVACY_URL!;
-export const DOCUMENTATION_URL = process.env.NEXT_PUBLIC_DOCUMENTATION_URL!;
+export function useVectorStore(
+  id: string | undefined,
+  {
+    enabled = true,
+    initialData,
+  }: {
+    enabled?: boolean;
+    initialData?: VectorStore;
+  } = {},
+) {
+  const { project } = useAppContext();
 
-export const ONBOARDING_PARAM = 'onboarding';
+  const query = useQuery({
+    ...readVectorStoreQuery(project.id, id ?? ''),
+    enabled: Boolean(id) && enabled,
+    initialData,
+  });
+
+  return query;
+}

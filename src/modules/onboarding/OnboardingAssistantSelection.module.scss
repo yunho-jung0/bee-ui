@@ -16,38 +16,21 @@
 
 @use 'styles/common' as *;
 
-.modal {
-  :global(.#{$prefix}--modal-container) {
-    max-inline-size: rem(992px);
-  }
-  :global(.#{$prefix}--modal-header) {
-    padding: $spacing-07 $spacing-07 0;
-    h2 {
-      font-size: rem(24px);
-      line-height: (28 / 24);
-    }
-  }
-  :global(.#{$prefix}--modal-content) {
-    padding: $spacing-06 $spacing-07;
-  }
-  :global(.#{$prefix}--modal-footer) {
-    block-size: auto;
-    padding: 0 $spacing-07 $spacing-07;
-  }
+.heading {
+  margin-block-end: $spacing-07;
 }
 
-.cards {
+.grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: $spacing-07;
+  &:not(:last-child) {
+    margin-block-end: $spacing-07;
+  }
 }
 
-.actions {
-  :global(.#{$prefix}--btn) {
-    block-size: auto;
-    padding-inline-end: rem(15px);
-    padding-block-end: rem(14px);
-    align-items: center;
-    column-gap: $spacing-04;
-  }
+.subheading {
+  @include type-style(body-02);
+  line-height: (20 / 16);
+  margin-block-end: $spacing-05;
 }
