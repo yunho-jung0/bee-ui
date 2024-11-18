@@ -27,6 +27,7 @@ import { Message } from './message/Message';
 import { useChat, useChatMessages } from './providers/ChatProvider';
 import { useFilesUpload } from './providers/FilesUploadProvider';
 import clsx from 'clsx';
+import { getNewRunSetup, getRunSetup, isBotMessage } from './utils';
 
 export const ConversationView = memo(function ConversationView() {
   const {
@@ -38,7 +39,7 @@ export const ConversationView = memo(function ConversationView() {
 
   const messages = useChatMessages();
 
-  const { assistant, builderState } = useChat();
+  const { assistant, thread, builderState } = useChat();
 
   const scrollToBottom = useCallback(() => {
     const scrollElement = scrollRef.current;
@@ -92,12 +93,27 @@ export const ConversationView = memo(function ConversationView() {
             const size = arr.length;
             const evenMessages = size % 2 === 0;
             const isPast = evenMessages ? index < size - 2 : index < size - 1;
+
+            const nextBotMessage = isBotMessage(msg)
+              ? arr.at(index + 2)
+              : arr.at(index + 1);
+
             return (
               <Message
                 key={msg.key}
                 message={msg}
                 isPast={isPast}
                 isScrolled={isScrolled}
+                nextRunSetup={
+                  isBotMessage(nextBotMessage) && nextBotMessage.run
+                    ? getRunSetup(nextBotMessage.run)
+                    : undefined
+                }
+                currentSetup={
+                  assistant.data && thread
+                    ? getNewRunSetup(assistant.data, thread)
+                    : undefined
+                }
               />
             );
           })}

@@ -46,9 +46,12 @@ import {
 import classes from './Builder.module.scss';
 import { IconSelector } from './IconSelector';
 import { InstructionsTextArea } from './InstructionsTextArea';
-import { KnowledgeSelector } from './KnowledgeSelector';
-import { StarterQuestionsTextArea } from './StarterQuestionsTextArea';
+import { ToolReference } from '@/app/api/tools/types';
+import { VectorStore } from '@/app/api/vector-stores/types';
+import { RunMetadata } from '@/app/api/threads-runs/types';
 import { useDeleteAssistant } from './useDeleteAssistant';
+import { StarterQuestionsTextArea } from './StarterQuestionsTextArea';
+import { KnowledgeSelector } from './KnowledgeSelector';
 
 interface Props {
   thread?: Thread;
@@ -268,4 +271,10 @@ export interface AssistantBuilderState {
   description?: string;
   icon?: AssistantFormValues['icon'];
   onAutoSaveAssistant: () => void;
+}
+
+export interface RunSetup {
+  instructions: string | null;
+  tools: ToolReference[];
+  resources: RunMetadata['resources'];
 }

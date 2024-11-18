@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-import { SkeletonText } from '@carbon/react';
-import classes from './ToolNameSkeleton.module.scss';
+@use 'styles/common' as *;
 
-export function ToolNameSkeleton() {
-  return (
-    <SkeletonText
-      width={LOADING_TOOL_NAME_WIDTH}
-      className={classes.skeleton}
-    />
-  );
+p.noContent {
+  color: $text-placeholder;
 }
-
-const LOADING_TOOL_NAME_WIDTH = '5rem';
+p.loading {
+  color: $text-placeholder;
+  fill: currentColor;
+  animation: pulse 2.5s infinite;
+  svg {
+    inline-size: 1.25rem;
+    block-size: 1.25rem;
+  }
+}

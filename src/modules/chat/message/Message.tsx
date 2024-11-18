@@ -14,48 +14,51 @@
  * limitations under the License.
  */
 
-'use client';
-import { AssistantPlan } from '@/app/api/threads-runs/types';
 import { BounceButton } from '@/components/BounceLink/BounceButton';
 import { Container } from '@/components/Container/Container';
-import { Spinner } from '@/components/Spinner/Spinner';
 import { CurrentUserAvatar } from '@/components/UserAvatar/UserAvatar';
 import { useAppContext } from '@/layout/providers/AppProvider';
 import { AssistantIcon } from '@/modules/assistants/icons/AssistantIcon';
 import { useUserProfile } from '@/store/user-profile';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
-import throttle from 'lodash/throttle';
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { useFocusWithin, useHover } from 'react-aria';
 import { useInView } from 'react-intersection-observer';
 import { mergeRefs } from 'react-merge-refs';
 import { PlanWithSources } from '../assistant-plan/PlanWithSources';
-import { getLastCompletedStep } from '../assistant-plan/utils';
 import { AttachmentsList } from '../attachments/AttachmentsList';
 import { getThreadAssistantName } from '../history/useGetThreadAssistant';
 import { useAssistantModal } from '../providers/AssistantModalProvider';
 import { useChat } from '../providers/ChatProvider';
 import { MessageFeedbackProvider } from '../providers/MessageFeedbackProvider';
-import { RunProvider, useRunContext } from '../providers/RunProvider';
+import { RunProvider } from '../providers/RunProvider';
 import { readRunQuery } from '../queries';
 import { ChatMessage } from '../types';
 import { ActionBar } from './ActionBar';
 import { ErrorMessage } from './ErrorMessage';
-import { MarkdownContent } from './MarkdownContent';
 import classes from './Message.module.scss';
 import { AttachmentLink } from './markdown/AttachmentLink';
+import { getRunSetup, isBotMessage } from '../utils';
+import { MessageContent } from './MessageContent';
+import { RunSetup } from '@/modules/assistants/builder/Builder';
+import { RunSetupDelta } from './RunSetupDelta';
+import isEqual from 'lodash/isEqual';
 
 interface Props {
   message: ChatMessage;
   isPast?: boolean;
   isScrolled?: boolean;
+  nextRunSetup?: RunSetup;
+  currentSetup?: RunSetup;
 }
 
 export const Message = memo(function Message({
   message,
   isPast,
   isScrolled,
+  nextRunSetup,
+  currentSetup,
 }: Props) {
   const contentRef = useRef<HTMLLIElement>(null);
   const { thread, builderState } = useChat();
@@ -71,10 +74,31 @@ export const Message = memo(function Message({
     enabled: Boolean(inView && thread && message.run_id),
   });
 
+  useEffect(() => {
+    if (run) {
+      setMessages((messages) => {
+        const messageToUpdate = messages.find(({ id }) => id === message.id);
+        if (isBotMessage(messageToUpdate)) {
+          messageToUpdate.run = run;
+        }
+      });
+    }
+  }, [message.id, run, setMessages]);
+
   const isAssistant = message.role === 'assistant';
   const hasActions = isAssistant && !message.pending;
 
   const contentHover = useHover({});
+
+  const hasOutdatedSetup = useMemo(() => {
+    if (!builderState) return false;
+
+    if (isBotMessage(message)) {
+      return run ? !isEqual(currentSetup, getRunSetup(run)) : false;
+    } else {
+      return nextRunSetup ? !isEqual(currentSetup, nextRunSetup) : false;
+    }
+  }, [builderState, currentSetup, message, nextRunSetup, run]);
 
   const [isFocusWithin, setFocusWithin] = useState(false);
   const { focusWithinProps } = useFocusWithin({
@@ -93,6 +117,7 @@ export const Message = memo(function Message({
           className={clsx(classes.root, {
             [classes.hovered]: showActions,
             [classes.isBuilder]: builderState,
+            [classes.hasOutdatedSetup]: hasOutdatedSetup,
           })}
           {...focusWithinProps}
           {...contentHover.hoverProps}
@@ -110,7 +135,7 @@ export const Message = memo(function Message({
             >
               <div className={classes.content}>
                 <Sender message={message} />
-                <Content message={message} />
+                <MessageContent message={message} />
               </div>
 
               {files && files.length > 0 && (
@@ -151,74 +176,21 @@ export const Message = memo(function Message({
             )}
           </Container>
         </li>
+
+        {builderState && run && (nextRunSetup || currentSetup) && (
+          <li>
+            <Container size="sm">
+              <RunSetupDelta
+                run={run}
+                nextRunSetup={nextRunSetup || currentSetup}
+              />
+            </Container>
+          </li>
+        )}
       </RunProvider>
     </MessageFeedbackProvider>
   );
 });
-
-function Content({ message }: { message: ChatMessage }) {
-  const { run } = useRunContext();
-
-  if (message.role === 'assistant') {
-    const hasContent = Boolean(message.content);
-
-    if (!hasContent) {
-      if (message.error != null) {
-        return null;
-      }
-
-      const requiredAction =
-        run?.status === 'requires_action' ? run.required_action : undefined;
-
-      const submitToolOutputsInProgress =
-        requiredAction?.type === 'submit_tool_outputs' ||
-        message.plan?.steps?.some(
-          ({ status, toolCalls }) =>
-            status === 'in_progress' &&
-            toolCalls.some(({ type }) => type === 'function'),
-        );
-      const submitToolApprovalsInProgress =
-        requiredAction?.type === 'submit_tool_approvals';
-
-      if (submitToolOutputsInProgress) {
-        return (
-          <blockquote>
-            <p>
-              A function tool call is in progress. I am waiting for a response
-              from the user.
-            </p>
-          </blockquote>
-        );
-      } else if (submitToolApprovalsInProgress) {
-        return null;
-      }
-
-      if (message.pending) {
-        return <PendingThought plan={message.plan} />;
-      }
-
-      if (!message.plan?.pending) {
-        return (
-          <blockquote>
-            <p className={classes.noContent}>No message from assistant</p>
-          </blockquote>
-        );
-      }
-
-      return null;
-    }
-    return (
-      <blockquote>
-        <MarkdownContent content={message.content} />
-      </blockquote>
-    );
-  }
-  return (
-    <blockquote>
-      <p>{message.content}</p>
-    </blockquote>
-  );
-}
 
 function Sender({ message }: { message: ChatMessage }) {
   const { role } = message;
@@ -254,41 +226,4 @@ function Sender({ message }: { message: ChatMessage }) {
       </figure>
     );
   }
-}
-
-function PendingThought({ plan }: { plan?: AssistantPlan }) {
-  const THROTTLE_WAIT = 2000;
-  const [thought, setThought] = useState(null);
-  const pendingThought = getLastCompletedStep(plan)?.thought;
-
-  const updateThought = useMemo(
-    () =>
-      throttle((thought) => {
-        setThought(thought);
-      }, THROTTLE_WAIT),
-    [],
-  );
-
-  useEffect(() => {
-    updateThought(pendingThought);
-  }, [pendingThought, updateThought]);
-
-  useEffect(() => {
-    return () => updateThought.cancel();
-  }, [updateThought]);
-
-  return thought ? (
-    <blockquote>
-      <p className={classes.loading}>
-        <span>{thought}</span>
-      </p>
-    </blockquote>
-  ) : (
-    <blockquote>
-      <p className={classes.loading}>
-        <span>Thinking</span>&nbsp;
-        <Spinner />
-      </p>
-    </blockquote>
-  );
 }
