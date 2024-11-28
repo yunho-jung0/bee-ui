@@ -103,18 +103,29 @@ const RUN_CONTROLLER_DEFAULT: RunController = {
   runId: null,
 };
 
-interface Props {
-  thread?: Thread;
-  threadAssistant?: ThreadAssistant;
-  initialData?: MessageWithFiles[];
+interface ChatSetup {
+  topBarEnabled?: boolean;
+  threadSettingsEnabled?: boolean;
   builderState?: AssistantBuilderState;
+  initialAssistantMessage?: string;
+}
+
+interface Props extends ChatSetup {
+  thread?: Thread;
+  assistant?: ThreadAssistant;
+  initialData?: MessageWithFiles[];
+  onMessageCompleted?: (thread: Thread, content: string) => void;
 }
 
 export function ChatProvider({
   thread: initialThread,
-  threadAssistant: initialThreadAssistant,
+  assistant: initialThreadAssistant,
   initialData,
+  topBarEnabled,
+  threadSettingsEnabled,
+  initialAssistantMessage,
   builderState,
+  onMessageCompleted,
   children,
 }: PropsWithChildren<Props>) {
   const [controller, setController, controllerRef] =
@@ -301,7 +312,7 @@ export function ChatProvider({
     ],
   );
 
-  ensureThreadRef.current = ensureThread;
+  if (ensureThreadRef) ensureThreadRef.current = ensureThread;
 
   const handleError = useHandleError();
 
@@ -317,14 +328,6 @@ export function ChatProvider({
   const handlRunCompleted = useCallback(() => {
     const lastMessage = getMessages().at(-1);
 
-    queryClient.invalidateQueries({
-      queryKey: readRunQuery(
-        project.id,
-        thread?.id ?? '',
-        lastMessage?.run_id ?? '',
-      ).queryKey,
-    });
-
     setController(RUN_CONTROLLER_DEFAULT);
 
     setMessages((messages) => {
@@ -333,13 +336,26 @@ export function ChatProvider({
         lastMessage.pending = false;
       }
     });
+
+    if (threadRef.current) {
+      queryClient.invalidateQueries({
+        queryKey: readRunQuery(
+          project.id,
+          threadRef.current.id,
+          lastMessage?.run_id ?? '',
+        ).queryKey,
+      });
+
+      onMessageCompleted?.(threadRef.current, lastMessage?.content ?? '');
+    }
   }, [
     getMessages,
+    onMessageCompleted,
     project.id,
     queryClient,
     setController,
     setMessages,
-    thread?.id,
+    threadRef,
   ]);
 
   const requireUserApproval = useCallback(
@@ -626,7 +642,6 @@ export function ChatProvider({
       };
     },
     [
-      queryClient,
       controllerRef,
       setController,
       handleCancelCurrentRun,
@@ -640,6 +655,7 @@ export function ChatProvider({
       getUsedTools,
       chatStream,
       setMessagesWithFilesQueryData,
+      queryClient,
       handleError,
       handlRunCompleted,
     ],
@@ -680,6 +696,9 @@ export function ChatProvider({
       },
       disabledTools,
       threadSettingsButtonRef,
+      topBarEnabled,
+      threadSettingsEnabled,
+      initialAssistantMessage,
     }),
     [
       controller.status,
@@ -696,6 +715,9 @@ export function ChatProvider({
       threadAssistant,
       assistant,
       disabledTools,
+      topBarEnabled,
+      threadSettingsEnabled,
+      initialAssistantMessage,
     ],
   );
 
@@ -717,7 +739,7 @@ export type SendMessageResult = {
   thread: Thread | null;
 };
 
-type ChatContextValue = {
+type ChatContextValue = ChatSetup & {
   status: ChatStatus;
   threadSettingsButtonRef: MutableRefObject<HTMLButtonElement | null>;
   getMessages: () => ChatMessage[];

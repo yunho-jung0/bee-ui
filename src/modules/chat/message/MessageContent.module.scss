@@ -16,27 +16,6 @@
 
 @use 'styles/common' as *;
 
-@keyframes pulse {
-  0% {
-    color: $color-cool-gray-30;
-  }
-  30% {
-    color: $color-cool-gray-50;
-  }
-  100% {
-    color: $color-cool-gray-30;
-  }
-}
-
 p.noContent {
   color: $text-placeholder;
-}
-p.loading {
-  color: $text-placeholder;
-  fill: currentColor;
-  animation: pulse 2.5s infinite;
-  svg {
-    inline-size: 1.25rem;
-    block-size: 1.25rem;
-  }
 }

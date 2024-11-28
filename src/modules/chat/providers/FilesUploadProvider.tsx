@@ -20,7 +20,7 @@ import { MessageAttachments } from '@/app/api/threads-messages/types';
 import { createVectorStore } from '@/app/api/vector-stores';
 import { deleteVectorStoreFile } from '@/app/api/vector-stores-files';
 import { useHandleError } from '@/layout/hooks/useHandleError';
-import { isNotNull } from '@/utils/helpers';
+import { isNotNull, noop } from '@/utils/helpers';
 import { useMutation } from '@tanstack/react-query';
 import {
   Dispatch,
@@ -56,14 +56,24 @@ const FilesUploadContext = createContext<{
   files: VectoreStoreFileUpload[];
   attachments: MessageAttachments | null;
   isPending: boolean;
-  dropzone: DropzoneState;
+  dropzone?: DropzoneState;
   vectorStoreId: string | null;
   removeFile: (id: string) => void;
   reset: () => void;
   clearFiles: () => void;
   setVectorStoreId: Dispatch<SetStateAction<string | null>>;
-  ensureThreadRef: MutableRefObject<() => Promise<Thread>>;
-} | null>(null);
+  ensureThreadRef: MutableRefObject<() => Promise<Thread>> | null;
+}>({
+  files: [],
+  attachments: null,
+  isPending: false,
+  vectorStoreId: null,
+  removeFile: noop,
+  reset: noop,
+  clearFiles: noop,
+  setVectorStoreId: noop,
+  ensureThreadRef: null,
+});
 
 export const CHAT_MAX_FILES_UPLOAD = 5;
 

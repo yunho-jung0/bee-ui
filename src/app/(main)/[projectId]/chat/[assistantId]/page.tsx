@@ -41,9 +41,11 @@ export default async function AssistantChatPage({
       <VectorStoreFilesUploadProvider projectId={projectId}>
         <FilesUploadProvider>
           <ChatProvider
-            threadAssistant={{
+            assistant={{
               data: assistant ?? null,
             }}
+            topBarEnabled
+            threadSettingsEnabled
           >
             <ChatHomeView />
           </ChatProvider>

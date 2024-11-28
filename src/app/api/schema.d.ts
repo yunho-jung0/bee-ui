@@ -53,6 +53,288 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/artifacts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: {
+                    after?: string;
+                    before?: string;
+                    limit?: number;
+                    order?: "asc" | "desc";
+                    order_by?: "created_at";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                created_at: number;
+                                description: string | null;
+                                id: string;
+                                message_id: string | null;
+                                metadata: {
+                                    [key: string]: string;
+                                };
+                                name: string;
+                                /** @enum {unknown} */
+                                object: "artifact";
+                                share_url: string | null;
+                                thread_id: string | null;
+                            }[];
+                            first_id: string | null;
+                            has_more: boolean;
+                            last_id: string | null;
+                            total_count: number;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        description?: string;
+                        message_id: string;
+                        metadata?: {
+                            [key: string]: string;
+                        };
+                        name: string;
+                        shared?: boolean;
+                        source_code: string;
+                        /** @enum {string} */
+                        type: "app";
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            created_at: number;
+                            description: string | null;
+                            id: string;
+                            message_id: string | null;
+                            metadata: {
+                                [key: string]: string;
+                            };
+                            name: string;
+                            /** @enum {unknown} */
+                            object: "artifact";
+                            share_url: string | null;
+                            thread_id: string | null;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/artifacts/{artifact_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    artifact_id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            created_at: number;
+                            description: string | null;
+                            id: string;
+                            message_id: string | null;
+                            metadata: {
+                                [key: string]: string;
+                            };
+                            name: string;
+                            /** @enum {unknown} */
+                            object: "artifact";
+                            share_url: string | null;
+                            thread_id: string | null;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    artifact_id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        description?: string;
+                        metadata?: {
+                            [key: string]: string;
+                        };
+                        name?: string;
+                        shared?: boolean;
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            created_at: number;
+                            description: string | null;
+                            id: string;
+                            message_id: string | null;
+                            metadata: {
+                                [key: string]: string;
+                            };
+                            name: string;
+                            /** @enum {unknown} */
+                            object: "artifact";
+                            share_url: string | null;
+                            thread_id: string | null;
+                        };
+                    };
+                };
+            };
+        };
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    artifact_id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @default true */
+                            deleted: boolean;
+                            id: string;
+                            /** @enum {unknown} */
+                            object: "artifact.deleted";
+                        };
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/artifacts/{artifact_id}/shared": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query: {
+                    secret: string;
+                };
+                header?: never;
+                path: {
+                    artifact_id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            created_at: number;
+                            description: string | null;
+                            id: string;
+                            metadata: {
+                                [key: string]: string;
+                            };
+                            name: string;
+                            /** @enum {unknown} */
+                            object: "artifact.shared";
+                        } & {
+                            source_code?: string;
+                            /** @enum {unknown} */
+                            type?: "app";
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/assistants": {
         parameters: {
             query?: never;
@@ -64,6 +346,7 @@ export interface paths {
             parameters: {
                 query?: {
                     after?: string;
+                    agent?: "bee" | "streamlit";
                     before?: string;
                     limit?: number;
                     order?: "asc" | "desc";
@@ -85,6 +368,8 @@ export interface paths {
                     content: {
                         "application/json": {
                             data: {
+                                /** @enum {string} */
+                                agent: "bee" | "streamlit";
                                 created_at: number;
                                 description: string | null;
                                 id: string;
@@ -173,6 +458,11 @@ export interface paths {
             requestBody?: {
                 content: {
                     "application/json": {
+                        /**
+                         * @default bee
+                         * @enum {string}
+                         */
+                        agent?: "bee" | "streamlit";
                         description?: string | null;
                         instructions?: string | null;
                         metadata?: {
@@ -248,6 +538,8 @@ export interface paths {
                     };
                     content: {
                         "application/json": {
+                            /** @enum {string} */
+                            agent: "bee" | "streamlit";
                             created_at: number;
                             description: string | null;
                             id: string;
@@ -351,6 +643,8 @@ export interface paths {
                     };
                     content: {
                         "application/json": {
+                            /** @enum {string} */
+                            agent: "bee" | "streamlit";
                             created_at: number;
                             description: string | null;
                             id: string;
@@ -510,6 +804,8 @@ export interface paths {
                     };
                     content: {
                         "application/json": {
+                            /** @enum {string} */
+                            agent: "bee" | "streamlit";
                             created_at: number;
                             description: string | null;
                             id: string;
@@ -7201,6 +7497,8 @@ export interface paths {
                     };
                     content: {
                         "application/json": {
+                            /** @enum {string} */
+                            agent: "bee" | "streamlit";
                             created_at: number;
                             description: string | null;
                             id: string;
@@ -7512,18 +7810,6 @@ export interface paths {
                              * @enum {string}
                              */
                             type: "auto";
-                        } | {
-                            static: {
-                                /** @description The number of tokens that overlap between chunks. */
-                                chunk_overlap_tokens: number;
-                                /** @description The maximum number of tokens in each chunk. */
-                                max_chunk_size_tokens: number;
-                            };
-                            /**
-                             * @description Always `static`.
-                             * @enum {string}
-                             */
-                            type: "static";
                         };
                         depends_on?: {
                             thread: {
@@ -7881,6 +8167,12 @@ export interface paths {
                             data: {
                                 /** @description The strategy used to chunk the file. */
                                 chunking_strategy?: {
+                                    /**
+                                     * @description Always `auto`.
+                                     * @enum {string}
+                                     */
+                                    type: "auto";
+                                } | {
                                     static: {
                                         /** @description The number of tokens that overlap between chunks. */
                                         chunk_overlap_tokens: number;
@@ -7946,18 +8238,6 @@ export interface paths {
                              * @enum {string}
                              */
                             type: "auto";
-                        } | {
-                            static: {
-                                /** @description The number of tokens that overlap between chunks. */
-                                chunk_overlap_tokens: number;
-                                /** @description The maximum number of tokens in each chunk. */
-                                max_chunk_size_tokens: number;
-                            };
-                            /**
-                             * @description Always `static`.
-                             * @enum {string}
-                             */
-                            type: "static";
                         };
                         /** @description A File ID that the vector store should use. Useful for tools like `file_search` that can access files. */
                         file_id: string;
@@ -7974,6 +8254,12 @@ export interface paths {
                         "application/json": {
                             /** @description The strategy used to chunk the file. */
                             chunking_strategy?: {
+                                /**
+                                 * @description Always `auto`.
+                                 * @enum {string}
+                                 */
+                                type: "auto";
+                            } | {
                                 static: {
                                     /** @description The number of tokens that overlap between chunks. */
                                     chunk_overlap_tokens: number;
@@ -8048,6 +8334,12 @@ export interface paths {
                         "application/json": {
                             /** @description The strategy used to chunk the file. */
                             chunking_strategy?: {
+                                /**
+                                 * @description Always `auto`.
+                                 * @enum {string}
+                                 */
+                                type: "auto";
+                            } | {
                                 static: {
                                     /** @description The number of tokens that overlap between chunks. */
                                     chunk_overlap_tokens: number;

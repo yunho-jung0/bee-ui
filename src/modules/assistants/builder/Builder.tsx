@@ -15,9 +15,7 @@
  */
 
 'use client';
-import { RunMetadata } from '@/app/api/threads-runs/types';
 import { Thread } from '@/app/api/threads/types';
-import { ToolReference } from '@/app/api/tools/types';
 import { Link } from '@/components/Link/Link';
 import { useAppContext } from '@/layout/providers/AppProvider';
 import { ChatHomeView } from '@/modules/chat/ChatHomeView';
@@ -48,6 +46,8 @@ import {
 import classes from './Builder.module.scss';
 import { IconSelector } from './IconSelector';
 import { InstructionsTextArea } from './InstructionsTextArea';
+import { ToolReference } from '@/app/api/tools/types';
+import { RunMetadata } from '@/app/api/threads-runs/types';
 import { KnowledgeSelector } from './KnowledgeSelector';
 import { StarterQuestionsTextArea } from './StarterQuestionsTextArea';
 import { useDeleteAssistant } from './useDeleteAssistant';
@@ -196,7 +196,7 @@ export function Builder({ thread, initialMessages }: Props) {
         <VectorStoreFilesUploadProvider projectId={project.id}>
           <FilesUploadProvider>
             <ChatProvider
-              threadAssistant={{
+              assistant={{
                 data: assistant,
               }}
               thread={thread}

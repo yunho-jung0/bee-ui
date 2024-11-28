@@ -55,8 +55,10 @@ export default async function ThreadPage({
       <FilesUploadProvider>
         <ChatProvider
           thread={thread}
-          threadAssistant={threadAssistant}
+          assistant={threadAssistant}
           initialData={initialMessages}
+          topBarEnabled
+          threadSettingsEnabled
         >
           <ConversationView />
         </ChatProvider>
