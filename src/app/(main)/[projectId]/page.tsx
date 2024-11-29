@@ -15,7 +15,7 @@
  */
 
 import { AssistantsHome } from '@/modules/assistants/AssistantsHome';
-import { LayoutInitializer } from '@/store/layout/LayouInitializer';
+import { LayoutInitializer } from '@/stores/global/layout/LayouInitializer';
 
 export default function HomePage() {
   return (

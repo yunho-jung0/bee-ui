@@ -49,7 +49,7 @@ import { TablePagination } from '@/components/TablePagination/TablePagination';
 import classes from './ApiKeysHome.module.scss';
 import { ApiKeyModal } from './manage/ApiKeyModal';
 import { usePagination } from '@/components/TablePagination/usePagination';
-import { useUserProfile } from '@/store/user-profile';
+import { useUserProfile } from '@/stores/global/user-profile';
 import { EmptyDataInfo } from '@/components/CardsList/CardsList';
 
 export function ApiKeysHome() {

@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-import { UserMetadata, UserProfileState } from '@/store/user-profile/types';
+import {
+  UserMetadata,
+  UserProfileState,
+} from '@/stores/global/user-profile/types';
 import { checkErrorCode } from '@/utils/handleApiError';
 import NextAuth from 'next-auth';
 import type { OAuthConfig } from 'next-auth/providers';

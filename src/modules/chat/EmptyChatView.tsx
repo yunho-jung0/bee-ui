@@ -17,7 +17,7 @@
 'use client';
 import { Container } from '@/components/Container/Container';
 import { useAppContext } from '@/layout/providers/AppProvider';
-import { useUserProfile } from '@/store/user-profile';
+import { useUserProfile } from '@/stores/global/user-profile';
 import { memo } from 'react';
 import { AssistantIcon } from '../assistants/icons/AssistantIcon';
 import classes from './EmptyChatView.module.scss';

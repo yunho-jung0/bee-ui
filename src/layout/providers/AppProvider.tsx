@@ -22,7 +22,7 @@ import { readAssistantQuery } from '@/modules/assistants/queries';
 import { Assistant } from '@/modules/assistants/types';
 import { readProjectQuery } from '@/modules/projects/queries';
 import { readProjectUserQuery } from '@/modules/projects/users/queries';
-import { useUserProfile } from '@/store/user-profile';
+import { useUserProfile } from '@/stores/global/user-profile';
 import { useQuery } from '@tanstack/react-query';
 import {
   createContext,

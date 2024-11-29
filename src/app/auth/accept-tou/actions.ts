@@ -18,7 +18,7 @@
 
 import { createProject, updateUser } from '@/app/api/rsc';
 import { encodeMetadata } from '@/app/api/utils';
-import { UserMetadata } from '@/store/user-profile/types';
+import { UserMetadata } from '@/stores/global/user-profile/types';
 import { updateSession } from '..';
 import { ensureSession } from '../rsc';
 

@@ -22,7 +22,7 @@ import {
 } from '@/app/api/projects-users/types';
 import { UserAvatar } from '@/components/UserAvatar/UserAvatar';
 import { useAppContext } from '@/layout/providers/AppProvider';
-import { useUserProfile } from '@/store/user-profile';
+import { useUserProfile } from '@/stores/global/user-profile';
 import { Button, ComboBox } from '@carbon/react';
 import { Add, Checkmark } from '@carbon/react/icons';
 import {

@@ -19,7 +19,7 @@ import { Container } from '@/components/Container/Container';
 import { CurrentUserAvatar } from '@/components/UserAvatar/UserAvatar';
 import { useAppContext } from '@/layout/providers/AppProvider';
 import { AssistantIcon } from '@/modules/assistants/icons/AssistantIcon';
-import { useUserProfile } from '@/store/user-profile';
+import { useUserProfile } from '@/stores/global/user-profile';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { memo, useEffect, useMemo, useRef, useState } from 'react';

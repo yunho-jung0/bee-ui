@@ -15,7 +15,7 @@
  */
 
 import { AppsHome } from '@/modules/apps/AppsHome';
-import { LayoutInitializer } from '@/store/layout/LayouInitializer';
+import { LayoutInitializer } from '@/stores/global/layout/LayouInitializer';
 
 export default function AppsPage() {
   return (

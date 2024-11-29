@@ -27,8 +27,8 @@ import {
 import { useNavigationControl } from '@/layout/providers/NavigationControlProvider';
 import { useToast } from '@/layout/providers/ToastProvider';
 import { useUpdateUser } from '@/modules/users/useUpdateUser';
-import { useUserProfile } from '@/store/user-profile';
-import { UserMetadata } from '@/store/user-profile/types';
+import { useUserProfile } from '@/stores/global/user-profile';
+import { UserMetadata } from '@/stores/global/user-profile/types';
 import { ONBOARDING_PARAM } from '@/utils/constants';
 import { isNotNull } from '@/utils/helpers';
 import isEmpty from 'lodash/isEmpty';

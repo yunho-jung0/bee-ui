@@ -18,10 +18,10 @@ import { withLenses } from '@dhmk/zustand-lens';
 import { useContext } from 'react';
 import { create, useStore as useZustandStore } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
+import { layoutSlice } from './layout';
 import { StoreContext } from './StoreProvider';
 import { InitialStoreState, StoreState } from './types';
 import { userProfileSlice } from './user-profile';
-import { layoutSlice } from './layout';
 
 export const createStore = (initialState?: InitialStoreState) =>
   create<StoreState>()(

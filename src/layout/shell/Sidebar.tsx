@@ -15,7 +15,7 @@
  */
 
 import { ThreadsHistory } from '@/modules/chat/history/ThreadsHistory';
-import { useLayout } from '@/store/layout';
+import { useLayout } from '@/stores/global/layout';
 import clsx from 'clsx';
 import { UserSetting } from '../hooks/useUserSetting';
 import { CollapsibleGroup } from './CollapsibleGroup';

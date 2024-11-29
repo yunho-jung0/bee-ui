@@ -23,7 +23,7 @@ import {
 import { AppBuilder } from '@/modules/apps/builder/AppBuilder';
 import { AppBuilderProvider } from '@/modules/apps/builder/AppBuilderProvider';
 import { extractCodeFromMessageContent } from '@/modules/apps/utils';
-import { LayoutInitializer } from '@/store/layout/LayouInitializer';
+import { LayoutInitializer } from '@/stores/global/layout/LayouInitializer';
 import { notFound } from 'next/navigation';
 
 interface Props {

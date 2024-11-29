@@ -18,7 +18,7 @@ import { deleteProjectUser, updateProjectUser } from '@/app/api/projects-users';
 import { ProjectUser, ProjectUserRole } from '@/app/api/projects-users/types';
 import { UserAvatar } from '@/components/UserAvatar/UserAvatar';
 import { useAppContext } from '@/layout/providers/AppProvider';
-import { useUserProfile } from '@/store/user-profile';
+import { useUserProfile } from '@/stores/global/user-profile';
 import { SkeletonPlaceholder, SkeletonText } from '@carbon/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import clsx from 'clsx';

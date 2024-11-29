@@ -15,7 +15,7 @@
  */
 
 import 'server-only';
-import { dummyUserProfileState } from '@/store/user-profile';
+import { dummyUserProfileState } from '@/stores/global/user-profile';
 import { JWT } from 'next-auth/jwt';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';

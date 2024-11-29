@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { UserMetadata } from '@/store/user-profile/types';
+import { UserMetadata } from '@/stores/global/user-profile/types';
 import { paths } from '../schema';
 import { EntityWithDecodedMetadata } from '../types';
 

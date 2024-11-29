@@ -19,7 +19,7 @@ import { ChatHomeView } from '@/modules/chat/ChatHomeView';
 import { ChatProvider } from '@/modules/chat/providers/ChatProvider';
 import { FilesUploadProvider } from '@/modules/chat/providers/FilesUploadProvider';
 import { VectorStoreFilesUploadProvider } from '@/modules/knowledge/files/VectorStoreFilesUploadProvider';
-import { LayoutInitializer } from '@/store/layout/LayouInitializer';
+import { LayoutInitializer } from '@/stores/global/layout/LayouInitializer';
 import { notFound } from 'next/navigation';
 
 interface Props {

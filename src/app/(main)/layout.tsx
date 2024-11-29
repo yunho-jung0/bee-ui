@@ -15,7 +15,7 @@
  */
 
 import { ModalProvider } from '@/layout/providers/ModalProvider';
-import { UserProfileInitializer } from '@/store/user-profile/UserProfileInitializer';
+import { UserProfileInitializer } from '@/stores/global/user-profile/UserProfileInitializer';
 import { SessionProvider } from 'next-auth/react';
 import { PropsWithChildren } from 'react';
 import { QueryProvider } from '../../layout/providers/QueryProvider';

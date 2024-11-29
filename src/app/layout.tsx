@@ -18,7 +18,7 @@ import { NavigationControlProvider } from '@/layout/providers/NavigationControlP
 import { ProgressBarProvider } from '@/layout/providers/ProgressBarProvider';
 import { ThemeProvider } from '@/layout/providers/ThemeProvider';
 import { ToastProvider } from '@/layout/providers/ToastProvider';
-import { StoreProvider } from '@/store/StoreProvider';
+import { StoreProvider } from '@/stores/global/StoreProvider';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { PropsWithChildren, ReactNode } from 'react';

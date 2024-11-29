@@ -22,7 +22,7 @@ import {
 } from '@/app/api/rsc';
 import { AssistantBuilderProvider } from '@/modules/assistants/builder/AssistantBuilderProvider';
 import { Builder } from '@/modules/assistants/builder/Builder';
-import { LayoutInitializer } from '@/store/layout/LayouInitializer';
+import { LayoutInitializer } from '@/stores/global/layout/LayouInitializer';
 import { notFound } from 'next/navigation';
 
 interface Props {

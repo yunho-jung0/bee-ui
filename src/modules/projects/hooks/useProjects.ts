@@ -16,7 +16,7 @@
 
 import { ProjectsListQuery } from '@/app/api/projects/types';
 import { MAX_API_FETCH_LIMIT } from '@/app/api/utils';
-import { useUserProfile } from '@/store/user-profile';
+import { useUserProfile } from '@/stores/global/user-profile';
 import { useInfiniteQuery, useQueries } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
 import { projectsQuery } from '../queries';

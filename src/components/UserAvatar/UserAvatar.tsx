@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useUserProfile } from '@/store/user-profile';
+import { useUserProfile } from '@/stores/global/user-profile';
 import clsx from 'clsx';
 import { HTMLAttributes } from 'react';
 import classes from './UserAvatar.module.scss';

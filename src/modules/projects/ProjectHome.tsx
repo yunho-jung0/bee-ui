@@ -18,7 +18,7 @@
 import { AdminView } from '@/components/AdminView/AdminView';
 import { useAppContext } from '@/layout/providers/AppProvider';
 import { useModal } from '@/layout/providers/ModalProvider';
-import { useUserProfile } from '@/store/user-profile';
+import { useUserProfile } from '@/stores/global/user-profile';
 import { Button, OverflowMenu, OverflowMenuItem } from '@carbon/react';
 import { Add } from '@carbon/react/icons';
 import { ReactElement, useState } from 'react';
