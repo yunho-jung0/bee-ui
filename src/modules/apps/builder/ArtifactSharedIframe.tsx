@@ -15,77 +15,102 @@
  */
 
 'use client';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import classes from './UserContentFrame.module.scss';
-import { useAppBuilder, useAppBuilderApi } from './AppBuilderProvider';
-import { Loading } from '@carbon/react';
 import { USERCONTENT_SITE_URL } from '@/utils/constants';
+import { removeTrailingSlash } from '@/utils/helpers';
+import { Loading } from '@carbon/react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useAppBuilder, useAppBuilderApi } from './AppBuilderProvider';
+import classes from './ArtifactSharedIframe.module.scss';
 
 interface Props {}
 
-export function UserContentFrame({}: Props) {
+export function ArtifactSharedIframe({}: Props) {
   const { code } = useAppBuilder();
   const { getCode } = useAppBuilderApi();
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const [state, setState] = useState<StliteState>('loading');
+  const [state, setState] = useState<State>(State.LOADING);
 
   const triggerCodeUpdate = useCallback((code: string | null) => {
+    if (!code) {
+      return;
+    }
+
     iframeRef?.current?.contentWindow?.postMessage?.(
       {
-        type: MESSAGE_TYPE_UPDATE_CODE,
+        type: StliteMessageType.UPDATE_CODE,
         code,
       },
       USERCONTENT_SITE_URL,
     );
   }, []);
 
+  const handleMessage = useCallback((event: MessageEvent<StliteMessage>) => {
+    const { origin, data } = event;
+
+    if (origin !== removeTrailingSlash(USERCONTENT_SITE_URL)) {
+      return;
+    }
+
+    if (
+      data.type === SCRIPT_RUN_STATE_CHANGED &&
+      data.scriptRunState === ScriptRunState.RUNNING
+    ) {
+      setState(State.READY);
+    }
+  }, []);
+
   useEffect(() => triggerCodeUpdate(code), [code, triggerCodeUpdate]);
 
   useEffect(() => {
-    if (state === 'ready') {
+    if (state === State.READY) {
       const code = getCode();
       if (code) triggerCodeUpdate(getCode());
     }
   }, [getCode, state, triggerCodeUpdate]);
 
   useEffect(() => {
-    const handleStliteMessage = (e: MessageEvent<StliteMessage>) => {
-      if (
-        e.data.type === STLITE_MESSAGE_TYPE_STATE_CHANGED &&
-        e.origin === USERCONTENT_SITE_URL
-      ) {
-        if (e.data.scriptRunState === 'running') setState('ready');
-      }
-    };
-
-    window.addEventListener('message', handleStliteMessage);
+    window.addEventListener('message', handleMessage);
 
     return () => {
-      window.removeEventListener('message', handleStliteMessage);
+      window.removeEventListener('message', handleMessage);
     };
-  }, []);
+  }, [handleMessage]);
 
   return (
     <div className={classes.root}>
       <iframe
-        src={USERCONTENT_SITE_URL}
         ref={iframeRef}
+        src={USERCONTENT_SITE_URL}
         title="Bee App preview"
-        className={classes.app}
         sandbox="allow-scripts allow-downloads allow-same-origin"
+        className={classes.app}
       />
-      {state === 'loading' && code && <Loading />}
+
+      {state === State.LOADING && code && <Loading />}
     </div>
   );
 }
 
-const MESSAGE_TYPE_UPDATE_CODE = 'updateCode';
-const MESSAGE_TYPE_ERROR = 'error';
+enum StliteMessageType {
+  UPDATE_CODE = 'updateCode',
+  // TODO: Add error handling
+  ERROR = 'error',
+}
 
-const STLITE_MESSAGE_TYPE_STATE_CHANGED = 'SCRIPT_RUN_STATE_CHANGED';
+enum ScriptRunState {
+  INITIAL = 'initial',
+  NOT_RUNNING = 'notRunning',
+  RUNNING = 'running',
+}
 
-type StliteState = 'loading' | 'ready';
+enum State {
+  LOADING = 'loading',
+  READY = 'ready',
+}
+
+const SCRIPT_RUN_STATE_CHANGED = 'SCRIPT_RUN_STATE_CHANGED';
+
 interface StliteMessage {
-  type: typeof STLITE_MESSAGE_TYPE_STATE_CHANGED;
-  scriptRunState: 'notRunning' | 'running' | 'initial';
+  type: typeof SCRIPT_RUN_STATE_CHANGED;
+  scriptRunState: ScriptRunState;
 }
