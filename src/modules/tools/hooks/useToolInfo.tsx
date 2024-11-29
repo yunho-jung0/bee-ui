@@ -14,16 +14,11 @@
  * limitations under the License.
  */
 
-import { useQuery } from '@tanstack/react-query';
-import { useAppContext } from '@/layout/providers/AppProvider';
-import { Tool, ToolReference } from '@/app/api/tools/types';
-import { readToolQuery } from '../queries';
-import { ComponentType, useMemo } from 'react';
 import { SystemToolId } from '@/app/api/threads-runs/types';
-import Arxiv from '../icons/arxiv.svg';
-import DuckDuckGo from '../icons/duckduckgo.svg';
-import Google from '../icons/google.svg';
-import Wikipedia from '../icons/wikipedia.svg';
+import { Tool, ToolReference } from '@/app/api/tools/types';
+import { encodeEntityWithMetadata } from '@/app/api/utils';
+import { useProject } from '@/stores/project';
+import { SkeletonIcon } from '@carbon/react';
 import {
   Code,
   DocumentView,
@@ -32,13 +27,19 @@ import {
   SearchLocate,
   Tools,
 } from '@carbon/react/icons';
-import { SkeletonIcon } from '@carbon/react';
+import { useQuery } from '@tanstack/react-query';
+import { ComponentType, useMemo } from 'react';
 import { ToolName } from '../common/ToolName';
-import { encodeEntityWithMetadata } from '@/app/api/utils';
+import Arxiv from '../icons/arxiv.svg';
+import DuckDuckGo from '../icons/duckduckgo.svg';
+import Google from '../icons/google.svg';
+import Wikipedia from '../icons/wikipedia.svg';
+import { readToolQuery } from '../queries';
 
 export function useToolInfo(toolReference: ToolReference) {
   const { tool: toolProp, id, type } = toolReference;
-  const { project } = useAppContext();
+  const project = useProject((state) => state.project);
+
   const { data, isLoading, error } = useQuery({
     ...readToolQuery(project.id, id),
     enabled: type === 'user' || type === 'system',

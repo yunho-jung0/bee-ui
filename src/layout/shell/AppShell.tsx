@@ -15,6 +15,7 @@
  */
 
 import { fetchProject } from '@/app/api/rsc';
+import { ProjectStoreProvider } from '@/stores/project/ProjectStoreProvider';
 import { MAIN_ELEMENT_ID } from '@/utils/constants';
 import { notFound } from 'next/navigation';
 import { PropsWithChildren } from 'react';
@@ -35,14 +36,16 @@ export async function AppShell({
   if (!project) notFound();
 
   return (
-    <AppProvider project={project}>
-      <div className={classes.root}>
-        <AppHeader />
+    <ProjectStoreProvider project={project}>
+      <AppProvider project={project}>
+        <div className={classes.root}>
+          <AppHeader />
 
-        <main id={MAIN_ELEMENT_ID} className={classes.content}>
-          {children}
-        </main>
-      </div>
-    </AppProvider>
+          <main id={MAIN_ELEMENT_ID} className={classes.content}>
+            {children}
+          </main>
+        </div>
+      </AppProvider>
+    </ProjectStoreProvider>
   );
 }
