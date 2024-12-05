@@ -118,6 +118,10 @@ interface Props extends ChatSetup {
   assistant?: ThreadAssistant;
   initialData?: MessageWithFiles[];
   onMessageCompleted?: (thread: Thread, content: string) => void;
+  onBeforePostMessage?: (
+    thread: Thread,
+    messages: ChatMessage[],
+  ) => Promise<void>;
 }
 
 export function ChatProvider({
@@ -129,6 +133,7 @@ export function ChatProvider({
   initialAssistantMessage,
   builderState,
   onMessageCompleted,
+  onBeforePostMessage,
   children,
 }: PropsWithChildren<Props>) {
   const [controller, setController, controllerRef] =
@@ -234,9 +239,28 @@ export function ChatProvider({
       : [];
   }, [assistant, vectorStoreId]);
 
-  const getUsedTools = useCallback(() => {
-    return getThreadTools().filter((t) => !toolIncluded(disabledTools, t));
-  }, [getThreadTools, disabledTools]);
+  const getUsedTools = useCallback(
+    (thread: Thread) => {
+      const tools = getThreadTools().filter(
+        (t) => !toolIncluded(disabledTools, t),
+      );
+
+      const { approvedTools } = thread.uiMetadata;
+      const toolApprovals = tools.reduce((toolApprovals, tool) => {
+        const toolId = getToolUsageId(tool);
+
+        if (isNotNull(toolId) && isExternalTool(tool.type, toolId)) {
+          toolApprovals[toolId] = {
+            require: approvedTools?.includes(toolId) ? 'never' : 'always',
+          };
+        }
+        return toolApprovals;
+      }, {} as NonNullable<ToolApprovals>);
+
+      return { tools, toolApprovals };
+    },
+    [disabledTools, getThreadTools],
+  );
 
   const cancel = useCallback(() => {
     controllerRef.current.abortController?.abort();
@@ -596,24 +620,13 @@ export function ChatProvider({
         thread = await ensureThread(userMessage.content);
 
         if (!regenerate) {
+          await onBeforePostMessage?.(thread, getMessages());
           newMessage = await handlePostMessage(thread.id, userMessage);
 
           setMessagesWithFilesQueryData(thread.id, newMessage);
         }
 
-        const { approvedTools } = thread.uiMetadata;
-        const tools = getUsedTools();
-        const toolApprovals = tools.reduce((toolApprovals, tool) => {
-          const toolId = getToolUsageId(tool);
-
-          if (isNotNull(toolId) && isExternalTool(tool.type, toolId)) {
-            toolApprovals[toolId] = {
-              require: approvedTools?.includes(toolId) ? 'never' : 'always',
-            };
-          }
-
-          return toolApprovals;
-        }, {} as NonNullable<ToolApprovals>);
+        const { tools, toolApprovals } = getUsedTools(thread);
 
         await chatStream({
           action: {
@@ -658,23 +671,25 @@ export function ChatProvider({
       };
     },
     [
-      controllerRef,
-      setController,
-      handleCancelCurrentRun,
-      setMessages,
-      project.id,
-      attachments,
-      files,
-      clearFiles,
       assistant,
-      ensureThread,
-      getUsedTools,
+      attachments,
       chatStream,
-      setMessagesWithFilesQueryData,
-      queryClient,
-      handleError,
-      openModal,
+      clearFiles,
+      controllerRef,
+      ensureThread,
+      files,
+      getMessages,
+      getUsedTools,
       handlRunCompleted,
+      handleCancelCurrentRun,
+      handleError,
+      onBeforePostMessage,
+      project.id,
+      queryClient,
+      setController,
+      setMessages,
+      setMessagesWithFilesQueryData,
+      openModal,
     ],
   );
 

@@ -40,6 +40,10 @@ import {
 import isEmpty from 'lodash/isEmpty';
 import { useCreateArtifact } from '../hooks/useCreateArtifact';
 import { useConfirmModalCloseOnDirty } from '@/layout/hooks/useConfirmModalCloseOnDirtyFields';
+import { extractAppNameFromStliteCode } from '../utils';
+import { useLayoutActions } from '@/store/layout';
+import { useRouter } from 'next-nprogress-bar';
+import { decodeEntityWithMetadata } from '@/app/api/utils';
 
 interface FormValues {
   icon: string;
@@ -51,23 +55,20 @@ interface Props extends ModalProps {
   project: Project;
   messageId?: string;
   code?: string;
-  onSaveSuccess?: (artifact: ArtifactResult) => void;
+  onCreateArtifact?: (artifact: Artifact) => void;
 }
 
 export function CreateAppModal({
   project,
   messageId,
   code,
-  onSaveSuccess,
+  onCreateArtifact,
   ...props
 }: Props) {
   const { onRequestClose } = props;
   const id = useId();
-  const {
-    setConfirmOnRequestClose,
-    clearConfirmOnRequestClose,
-    onRequestCloseSafe,
-  } = useModalControl();
+  const { onRequestCloseSafe } = useModalControl();
+  const { setLayout } = useLayoutActions();
 
   const {
     mutateAsync: mutateSave,
@@ -75,19 +76,33 @@ export function CreateAppModal({
     error: saveError,
   } = useCreateArtifact({
     project,
-    onSaveSuccess: (artifact) => {
+    onSaveSuccess: (result) => {
+      const artifact = decodeEntityWithMetadata<Artifact>(result);
+      setLayout({
+        navbarProps: {
+          type: 'app-builder',
+          artifact,
+        },
+      });
+
+      window.history.pushState(
+        null,
+        '',
+        `/${project.id}/apps/builder/a/${artifact.id}`,
+      );
+
+      onCreateArtifact?.(artifact);
       onRequestClose();
-      onSaveSuccess?.(artifact);
     },
   });
 
   const {
-    control,
     register,
     handleSubmit,
     formState: { errors, isValid, isSubmitting, dirtyFields },
   } = useForm<FormValues>({
     mode: 'onChange',
+    defaultValues: { name: extractAppNameFromStliteCode(code ?? '') },
   });
 
   useConfirmModalCloseOnDirty(!isEmpty(dirtyFields), 'app');

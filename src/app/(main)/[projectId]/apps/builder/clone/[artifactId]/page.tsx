@@ -14,38 +14,31 @@
  * limitations under the License.
  */
 
-import {
-  ensureAppBuilderAssistant,
-  fetchThread,
-  listMessagesWithFiles,
-  MESSAGES_PAGE_SIZE,
-} from '@/app/api/rsc';
+import { fetchArtifact, fetchSharedArtifact } from '@/app/api/artifacts';
+import { ensureAppBuilderAssistant } from '@/app/api/rsc';
 import { AppBuilder } from '@/modules/apps/builder/AppBuilder';
 import { AppBuilderProvider } from '@/modules/apps/builder/AppBuilderProvider';
-import { extractCodeFromMessageContent } from '@/modules/apps/utils';
 import { LayoutInitializer } from '@/store/layout/LayouInitializer';
 import { notFound } from 'next/navigation';
-import { getMessagesFromThreadMessages } from '@/modules/chat/utils';
-import { MessageResult } from '@/app/api/threads-messages/types';
 
 interface Props {
   params: {
     projectId: string;
-    threadId: string;
+    artifactId: string;
   };
+  searchParams: { secret?: string };
 }
 
-export default async function AppBuilderPage({
-  params: { projectId, threadId },
+export default async function CloneAppPage({
+  params: { projectId, artifactId },
+  searchParams: { secret },
 }: Props) {
   const assistant = await ensureAppBuilderAssistant(projectId);
-  const thread = await fetchThread(projectId, threadId);
+  const artifactResult = secret
+    ? await fetchSharedArtifact(projectId, artifactId, secret)
+    : await fetchArtifact(projectId, artifactId);
 
-  if (!(assistant && thread)) notFound();
-
-  const initialMessages = await listMessagesWithFiles(projectId, threadId, {
-    limit: MESSAGES_PAGE_SIZE,
-  });
+  if (!(assistant && artifactResult)) notFound();
 
   return (
     <LayoutInitializer
@@ -54,24 +47,9 @@ export default async function AppBuilderPage({
         navbarProps: { type: 'app-builder' },
       }}
     >
-      <AppBuilderProvider
-        code={extractCodeFromMessageContent(
-          getLastMessageWithStreamlitCode(initialMessages)?.content ?? '',
-        )}
-      >
-        <AppBuilder
-          assistant={assistant}
-          thread={thread}
-          initialMessages={initialMessages}
-        />
+      <AppBuilderProvider code={artifactResult.source_code}>
+        <AppBuilder assistant={assistant} />
       </AppBuilderProvider>
     </LayoutInitializer>
-  );
-}
-
-function getLastMessageWithStreamlitCode(messages: MessageResult[]) {
-  const chatMessages = getMessagesFromThreadMessages(messages);
-  return chatMessages.findLast((message) =>
-    Boolean(extractCodeFromMessageContent(message.content)),
   );
 }

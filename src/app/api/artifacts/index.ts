@@ -59,6 +59,20 @@ export async function readArtifact(projectId: string, id: string) {
   return res.data;
 }
 
+export async function readSharedArtifact(
+  projectId: string,
+  secret: string,
+  id: string,
+) {
+  const res = await client.GET('/v1/artifacts/{artifact_id}/shared', {
+    params: { path: { artifact_id: id }, query: { secret } },
+    headers: getRequestHeaders(projectId),
+  });
+
+  assertSuccessResponse(res);
+  return res.data;
+}
+
 export async function listArtifacts(
   projectId: string,
   query: ArtifactsListQuery,
@@ -87,4 +101,14 @@ export async function fetchArtifact(projectId: string, id?: string) {
   if (!id) return;
 
   return await fetchEntity(() => readArtifact(projectId, id));
+}
+
+export async function fetchSharedArtifact(
+  projectId: string,
+  id?: string,
+  secret?: string,
+) {
+  if (!id || !secret) return;
+
+  return await fetchEntity(() => readSharedArtifact(projectId, secret, id));
 }

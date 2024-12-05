@@ -93,6 +93,7 @@ const getCspHeader = (nonce: string) => {
     img-src 'self' blob: data: www.ibm.com/;
     font-src 'self';
     object-src 'none';
+    frame-src ${USERCONTENT_SITE_URL};
     base-uri 'self';
     form-action 'self';
     frame-ancestors 'none';
