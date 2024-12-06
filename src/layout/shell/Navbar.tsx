@@ -15,21 +15,22 @@
  */
 
 import { Container } from '@/components/Container/Container';
+import { Link } from '@/components/Link/Link';
+import { Tooltip } from '@/components/Tooltip/Tooltip';
+import { AppIcon } from '@/modules/apps/AppIcon';
+import { AppBuilderNavbarActions } from '@/modules/apps/builder/AppBuilderNavbarActions';
+import { ProjectSelector } from '@/modules/projects/ProjectSelector';
+import { useLayout } from '@/store/layout';
+import { FeatureName, isFeatureEnabled } from '@/utils/isFeatureEnabled';
+import { Button } from '@carbon/react';
+import { ArrowLeft } from '@carbon/react/icons';
+import { ReactElement, useMemo } from 'react';
 import { UserSetting, useUserSetting } from '../hooks/useUserSetting';
+import { useAppContext } from '../providers/AppProvider';
 import classes from './Navbar.module.scss';
 import { SidebarProps } from './Sidebar';
 import { SidebarButton } from './SidebarButton';
 import { SkipNav } from './SkipNav';
-import { useLayout } from '@/store/layout';
-import { AppBuilderNavbarActions } from '@/modules/apps/builder/AppBuilderNavbarActions';
-import { ReactElement, useMemo } from 'react';
-import { Link } from '@/components/Link/Link';
-import { useAppContext } from '../providers/AppProvider';
-import { Button } from '@carbon/react';
-import { ArrowLeft } from '@carbon/react/icons';
-import { Tooltip } from '@/components/Tooltip/Tooltip';
-import { FeatureName, isFeatureEnabled } from '@/utils/isFeatureEnabled';
-import { ProjectSelector } from '@/modules/projects/ProjectSelector';
 
 interface Props {
   sidebarId: SidebarProps['id'];
@@ -47,10 +48,15 @@ export function Navbar({ sidebarId, sidebarOpen }: Props) {
     const { title } = navbarProps;
     switch (navbarProps.type) {
       case 'app-builder':
+        const icon = navbarProps?.artifact?.uiMetadata.icon;
+
         return navbarProps.artifact
           ? [
               { title: 'Apps', url: `/${project.id}/apps` },
-              { title: navbarProps.artifact.name },
+              {
+                title: navbarProps.artifact.name,
+                icon: icon ? <AppIcon name={icon} /> : null,
+              },
             ]
           : [{ title: 'App Builder' }];
       case 'app-detail':
@@ -112,8 +118,11 @@ export function NavbarHeading({ items }: { items?: HeadingItem[] }) {
 
   return (
     <ul className={classes.heading}>
-      {items.map(({ url, title }, key) => (
-        <li key={key}>{url ? <Link href={url}>{title}</Link> : title}</li>
+      {items.map(({ url, title, icon }, key) => (
+        <li key={key}>
+          {icon}
+          {url ? <Link href={url}>{title}</Link> : title}
+        </li>
       ))}
     </ul>
   );
@@ -122,5 +131,5 @@ export function NavbarHeading({ items }: { items?: HeadingItem[] }) {
 interface HeadingItem {
   title: string;
   url?: string;
-  icon?: ReactElement;
+  icon?: ReactElement | null;
 }

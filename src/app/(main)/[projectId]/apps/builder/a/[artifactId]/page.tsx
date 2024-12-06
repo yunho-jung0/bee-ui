@@ -21,11 +21,9 @@ import {
   listMessagesWithFiles,
   MESSAGES_PAGE_SIZE,
 } from '@/app/api/rsc';
-import { decodeEntityWithMetadata } from '@/app/api/utils';
-import { ensureDefaultOrganizationId, ensureSession } from '@/app/auth/rsc';
+import { ensureDefaultOrganizationId } from '@/app/auth/rsc';
 import { AppBuilder } from '@/modules/apps/builder/AppBuilder';
 import { AppBuilderProvider } from '@/modules/apps/builder/AppBuilderProvider';
-import { Artifact } from '@/modules/apps/types';
 import { LayoutInitializer } from '@/store/layout/LayouInitializer';
 import { notFound } from 'next/navigation';
 import { getAppBuilderNavbarProps } from '../../../utils';
@@ -43,15 +41,13 @@ export default async function AppBuilderPage({
   const organizationId = await ensureDefaultOrganizationId();
 
   const assistant = await ensureAppBuilderAssistant(organizationId, projectId);
-  const artifactResult = await fetchArtifact(projectId, artifactId);
+  const artifact = await fetchArtifact(projectId, artifactId);
 
-  const thread = artifactResult?.thread_id
-    ? await fetchThread(organizationId, projectId, artifactResult?.thread_id)
+  const thread = artifact?.thread_id
+    ? await fetchThread(organizationId, projectId, artifact?.thread_id)
     : null;
 
-  if (!(assistant && thread && artifactResult)) notFound();
-
-  const artifact = decodeEntityWithMetadata<Artifact>(artifactResult);
+  if (!(assistant && thread && artifact)) notFound();
 
   const initialMessages = thread.id
     ? await listMessagesWithFiles(organizationId, projectId, thread.id, {
@@ -63,9 +59,7 @@ export default async function AppBuilderPage({
     <LayoutInitializer
       layout={{ navbarProps: getAppBuilderNavbarProps(projectId, artifact) }}
     >
-      <AppBuilderProvider
-        artifact={decodeEntityWithMetadata<Artifact>(artifact)}
-      >
+      <AppBuilderProvider artifact={artifact}>
         <AppBuilder
           assistant={assistant}
           thread={thread}
