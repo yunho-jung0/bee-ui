@@ -14,13 +14,8 @@
  * limitations under the License.
  */
 
-import { fetchArtifact, fetchSharedArtifact } from '@/app/api/artifacts';
-import { ensureAppBuilderAssistant } from '@/app/api/rsc';
-import { ensureDefaultOrganizationId, ensureSession } from '@/app/auth/rsc';
-import { AppBuilder } from '@/modules/apps/builder/AppBuilder';
-import { AppBuilderProvider } from '@/modules/apps/builder/AppBuilderProvider';
-import { LayoutInitializer } from '@/store/layout/LayouInitializer';
-import { notFound, redirect } from 'next/navigation';
+import { ensureSession } from '@/app/auth/rsc';
+import { redirect } from 'next/navigation';
 
 interface Props {
   params: {

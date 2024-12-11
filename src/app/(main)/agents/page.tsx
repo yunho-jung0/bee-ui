@@ -14,34 +14,12 @@
  * limitations under the License.
  */
 
-@use 'styles/common' as *;
+import { ensureSession } from '@/app/auth/rsc';
+import { redirect } from 'next/navigation';
 
-.illustration {
-  border-radius: $spacing-03;
-  background-color: $layer-02;
-  display: flex;
-  margin-block-end: $spacing-07;
-  overflow: hidden;
-  background-color: $color-white;
-  aspect-ratio: 544 / 256;
-  video {
-    inline-size: 100%;
-    transform: scale(1.6) translate(0, 6%);
-  }
-}
+export default async function AgentsOnboardingPage() {
+  const session = await ensureSession();
+  const { default_project: defaultProjectId } = session.userProfile;
 
-.heading {
-  margin-block-end: $spacing-03;
-}
-
-.content {
-  @include type-style(body-02);
-  line-height: (20 / 16);
-  > * {
-    line-height: inherit;
-    font-size: inherit;
-    + * {
-      margin-block-start: rem(20px);
-    }
-  }
+  redirect(`/${defaultProjectId}/?agents-onboarding`);
 }

@@ -24,7 +24,7 @@ export function OnboardingIntro() {
   return (
     <div>
       <div className={classes.illustration}>
-        <Illustration />
+        <video src="/video/agents.mp4" playsInline autoPlay muted />
       </div>
 
       <h2 className={classes.heading}>Agents</h2>

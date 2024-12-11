@@ -99,7 +99,7 @@ export function AssistantsHome() {
           onFetchNextPage={fetchNextPage}
           isFetching={isFetching}
           error={error}
-          noItemsText="You haven’t created any agents yet."
+          noItemsInfo="You haven’t created any agents yet."
           noItemsDescr="Get started by exploring the library of available agents to
                 jump-start your productivity, or build your own agent fitted
                 specifically for your needs and use cases!"

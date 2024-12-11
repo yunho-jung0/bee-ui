@@ -37,8 +37,6 @@ export function OnboardingAssistantSelection({
 
   return (
     <div>
-      <h2 className={classes.heading}>Build an agent</h2>
-
       <div className={classes.grid}>
         <StartFromScratchCard
           selected={selected === null}
