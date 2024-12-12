@@ -20,7 +20,6 @@ import {
   createContext,
   PropsWithChildren,
   use,
-  useEffect,
   useMemo,
   useState,
 } from 'react';
@@ -76,7 +75,10 @@ export function AppBuilderProvider({
 const AppBuilderContext = createContext<{
   code: string | null;
   artifact: Artifact | null;
-} | null>(null);
+}>({
+  code: null,
+  artifact: null,
+});
 
 const AppBuilderApiContext = createContext<{
   setCode: (content: string) => void;
@@ -97,11 +99,5 @@ export function useAppBuilderApi() {
 }
 
 export function useAppBuilder() {
-  const context = use(AppBuilderContext);
-
-  if (!context) {
-    throw new Error('useAppBuilder must be used within a AppBuilderProvider');
-  }
-
-  return context;
+  return use(AppBuilderContext);
 }
