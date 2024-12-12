@@ -1,5 +1,11 @@
 # Changelog
 
+## <small>0.0.8 (2024-12-12)</small>
+
+* feat: qa for launch  (#130) ([9476ff3](https://github.com/i-am-bee/bee-ui/commit/9476ff3)), closes [#130](https://github.com/i-am-bee/bee-ui/issues/130)
+* feat: qa for launch (#133) ([b7529f5](https://github.com/i-am-bee/bee-ui/commit/b7529f5)), closes [#133](https://github.com/i-am-bee/bee-ui/issues/133)
+* feat(apps): allow links to open popups (#127) ([425aaac](https://github.com/i-am-bee/bee-ui/commit/425aaac)), closes [#127](https://github.com/i-am-bee/bee-ui/issues/127)
+
 ## <small>0.0.7 (2024-12-11)</small>
 
 * fix: broken auth, api calls on test user (#95) ([856f16f](https://github.com/i-am-bee/bee-ui/commit/856f16f)), closes [#95](https://github.com/i-am-bee/bee-ui/issues/95)
