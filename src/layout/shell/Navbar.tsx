@@ -55,7 +55,6 @@ export function Navbar({ sidebarId, sidebarOpen }: Props) {
         icon = navbarProps?.artifact?.uiMetadata.icon;
         return navbarProps.artifact
           ? [
-              { title: 'Apps', url: `/${project.id}/apps` },
               {
                 title: navbarProps.artifact.name,
                 icon: icon ? <AppIcon name={icon} /> : null,
@@ -125,7 +124,7 @@ export function Navbar({ sidebarId, sidebarOpen }: Props) {
                 showShareButton={navbarProps.type === 'app-detail'}
               />
             )}
-          {navbarProps?.type === 'chat' && (
+          {navbarProps?.type === 'chat' && navbarProps.assistant && (
             <ChatNavbarActions assistant={navbarProps.assistant} />
           )}
 
