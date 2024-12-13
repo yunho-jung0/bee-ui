@@ -15,16 +15,23 @@
  */
 
 'use client';
+import { getAppBuilderNavbarProps } from '@/app/(main)/[projectId]/apps/utils';
 import { createMessage } from '@/app/api/threads-messages';
 import { Thread } from '@/app/api/threads/types';
 import { decodeMetadata, encodeMetadata } from '@/app/api/utils';
 import { useModal } from '@/layout/providers/ModalProvider';
+import {
+  ProjectProvider,
+  useProjectContext,
+} from '@/layout/providers/ProjectProvider';
+import { NavbarHeading } from '@/layout/shell/Navbar';
 import { ChatProvider, useChat } from '@/modules/chat/providers/ChatProvider';
 import {
   ChatMessage,
   MessageMetadata,
   MessageWithFiles,
 } from '@/modules/chat/types';
+import { useLayoutActions } from '@/store/layout';
 import {
   Button,
   IconButton,
@@ -34,13 +41,16 @@ import {
   TabPanels,
   Tabs,
 } from '@carbon/react';
-import { Share } from '@carbon/react/icons';
+import { ArrowLeft, Share } from '@carbon/react/icons';
 import { useQueryClient } from '@tanstack/react-query';
 import clsx from 'clsx';
+import { useRouter } from 'next-nprogress-bar';
 import { useCallback, useEffect, useState } from 'react';
 import { Assistant } from '../../assistants/types';
 import { ConversationView } from '../../chat/ConversationView';
 import { threadsQuery } from '../../chat/history/queries';
+import { AppIcon } from '../AppIcon';
+import { useArtifactsCount } from '../hooks/useArtifactsCount';
 import { SaveAppModal } from '../manage/SaveAppModal';
 import { ShareAppModal } from '../ShareAppModal';
 import { extractCodeFromMessageContent } from '../utils';
@@ -48,14 +58,6 @@ import classes from './AppBuilder.module.scss';
 import { useAppBuilder, useAppBuilderApi } from './AppBuilderProvider';
 import { ArtifactSharedIframe } from './ArtifactSharedIframe';
 import { SourceCodeEditor } from './SourceCodeEditor';
-import {
-  ProjectProvider,
-  useProjectContext,
-} from '@/layout/providers/ProjectProvider';
-import { getAppBuilderNavbarProps } from '@/app/(main)/[projectId]/apps/utils';
-import { useRouter } from 'next-nprogress-bar';
-import { useLayoutActions } from '@/store/layout';
-import { useArtifactsCount } from '../hooks/useArtifactsCount';
 
 interface Props {
   thread?: Thread;
@@ -157,13 +159,15 @@ function AppBuilderContent() {
   const { project, organization } = useProjectContext();
   const { openModal } = useModal();
   const { getMessages, sendMessage, thread } = useChat();
-  const { setArtifact } = useAppBuilderApi();
-  const { code, artifact } = useAppBuilder();
+  const { setArtifact, setMobilePreviewOpen } = useAppBuilderApi();
+  const { code, artifact, mobilePreviewOpen } = useAppBuilder();
   const { setLayout } = useLayoutActions();
 
   const totalCount = useArtifactsCount();
 
   const message = getLastMessageWithCode(getMessages());
+
+  const icon = artifact?.uiMetadata.icon;
 
   useEffect(() => {
     const navbarProps = getAppBuilderNavbarProps(
@@ -228,7 +232,11 @@ function AppBuilderContent() {
   );
 
   return (
-    <div className={classes.root}>
+    <div
+      className={clsx(classes.root, {
+        [classes.mobilePreviewOpen]: mobilePreviewOpen,
+      })}
+    >
       <section className={classes.chat}>
         <ConversationView />
       </section>
@@ -243,6 +251,27 @@ function AppBuilderContent() {
         >
           {code !== null && (
             <div className={classes.appPaneHeader}>
+              <div className={classes.appPaneHeaderMobile}>
+                <Button
+                  size="sm"
+                  kind="tertiary"
+                  onClick={() => setMobilePreviewOpen(false)}
+                >
+                  <ArrowLeft />
+                </Button>
+
+                {artifact && (
+                  <NavbarHeading
+                    items={[
+                      {
+                        title: artifact.name,
+                        icon: icon ? <AppIcon name={icon} /> : null,
+                      },
+                    ]}
+                  />
+                )}
+              </div>
+
               <TabList aria-label="App View mode">
                 <Tab>UI Preview</Tab>
                 <Tab>Source code</Tab>
