@@ -1,5 +1,13 @@
 # Changelog
 
+## <small>0.0.12 (2024-12-13)</small>
+
+* chore(ci): add usercontent site url to local build arguments (#142) ([0827fc1](https://github.com/i-am-bee/bee-ui/commit/0827fc1)), closes [#142](https://github.com/i-am-bee/bee-ui/issues/142)
+* chore(ci): add usercontent site url to local build arguments (#143) ([53d7f05](https://github.com/i-am-bee/bee-ui/commit/53d7f05)), closes [#143](https://github.com/i-am-bee/bee-ui/issues/143)
+* feat: responsive ui (#139) ([96f44b4](https://github.com/i-am-bee/bee-ui/commit/96f44b4)), closes [#139](https://github.com/i-am-bee/bee-ui/issues/139)
+* feat: track app and assistant origins (#141) ([727c251](https://github.com/i-am-bee/bee-ui/commit/727c251)), closes [#141](https://github.com/i-am-bee/bee-ui/issues/141) [i-am-bee/internal#39](https://github.com/i-am-bee/internal/issues/39)
+* fix(vector-store): process daily limit error on create file (#136) ([151afb3](https://github.com/i-am-bee/bee-ui/commit/151afb3)), closes [#136](https://github.com/i-am-bee/bee-ui/issues/136)
+
 ## <small>0.0.11 (2024-12-13)</small>
 
 * fix: session update (#138) ([af9d1f1](https://github.com/i-am-bee/bee-ui/commit/af9d1f1)), closes [#138](https://github.com/i-am-bee/bee-ui/issues/138)
