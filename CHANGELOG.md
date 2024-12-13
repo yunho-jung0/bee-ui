@@ -1,5 +1,10 @@
 # Changelog
 
+## <small>0.0.11 (2024-12-13)</small>
+
+* fix: session update (#138) ([af9d1f1](https://github.com/i-am-bee/bee-ui/commit/af9d1f1)), closes [#138](https://github.com/i-am-bee/bee-ui/issues/138)
+* feat(observe): add streamlit token count trace info (#137) ([10eee5e](https://github.com/i-am-bee/bee-ui/commit/10eee5e)), closes [#137](https://github.com/i-am-bee/bee-ui/issues/137)
+
 ## <small>0.0.10 (2024-12-13)</small>
 
 * feat: qa for launch (#135) ([19b8911](https://github.com/i-am-bee/bee-ui/commit/19b8911)), closes [#135](https://github.com/i-am-bee/bee-ui/issues/135)
