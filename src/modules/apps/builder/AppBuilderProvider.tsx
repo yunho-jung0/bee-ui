@@ -34,11 +34,13 @@ import { Artifact } from '../types';
 interface Props {
   code?: string;
   artifact?: Artifact;
+  isSharedClone?: boolean;
 }
 
 export function AppBuilderProvider({
   code: initialCode,
   artifact: initialArtifact,
+  isSharedClone,
   children,
 }: PropsWithChildren<Props>) {
   const searchParams = useSearchParams();
@@ -74,7 +76,9 @@ export function AppBuilderProvider({
 
   return (
     <AppBuilderApiContext.Provider value={apiValue}>
-      <AppBuilderContext.Provider value={{ code, artifact, mobilePreviewOpen }}>
+      <AppBuilderContext.Provider
+        value={{ code, artifact, isSharedClone, mobilePreviewOpen }}
+      >
         {children}
       </AppBuilderContext.Provider>
     </AppBuilderApiContext.Provider>
@@ -84,6 +88,7 @@ export function AppBuilderProvider({
 const AppBuilderContext = createContext<{
   code: string | null;
   artifact: Artifact | null;
+  isSharedClone?: boolean;
   mobilePreviewOpen: boolean;
 }>({
   code: null,

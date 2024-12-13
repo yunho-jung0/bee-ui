@@ -45,7 +45,7 @@ import { ArrowLeft, Share } from '@carbon/react/icons';
 import { useQueryClient } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useRouter } from 'next-nprogress-bar';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Assistant } from '../../assistants/types';
 import { ConversationView } from '../../chat/ConversationView';
 import { threadsQuery } from '../../chat/history/queries';
@@ -58,6 +58,7 @@ import classes from './AppBuilder.module.scss';
 import { useAppBuilder, useAppBuilderApi } from './AppBuilderProvider';
 import { ArtifactSharedIframe } from './ArtifactSharedIframe';
 import { SourceCodeEditor } from './SourceCodeEditor';
+import { ArtifactMetadata } from '../types';
 
 interface Props {
   thread?: Thread;
@@ -160,12 +161,25 @@ function AppBuilderContent() {
   const { openModal } = useModal();
   const { getMessages, sendMessage, thread } = useChat();
   const { setArtifact, setMobilePreviewOpen } = useAppBuilderApi();
-  const { code, artifact, mobilePreviewOpen } = useAppBuilder();
+  const { code, artifact, mobilePreviewOpen, isSharedClone } = useAppBuilder();
   const { setLayout } = useLayoutActions();
 
   const totalCount = useArtifactsCount();
 
   const message = getLastMessageWithCode(getMessages());
+
+  const additionalMetadata: ArtifactMetadata = useMemo(
+    () => ({
+      // when updating copy origin over, when creating new value depends whenever this is from shared link or not
+      origin:
+        artifact != null
+          ? artifact.uiMetadata.origin
+          : isSharedClone
+            ? 'share'
+            : 'new',
+    }),
+    [artifact, isSharedClone],
+  );
 
   const icon = artifact?.uiMetadata.icon;
 
@@ -193,6 +207,7 @@ function AppBuilderContent() {
                     code={code ?? undefined}
                     onSaveSuccess={setArtifact}
                     isConfirmation
+                    additionalMetadata={additionalMetadata}
                     {...props}
                   />
                 </ProjectProvider>
@@ -207,6 +222,7 @@ function AppBuilderContent() {
     });
   }, [
     artifact,
+    additionalMetadata,
     code,
     message?.id,
     openModal,
@@ -316,6 +332,7 @@ function AppBuilderContent() {
                             messageId={message?.id}
                             code={code}
                             onSaveSuccess={setArtifact}
+                            additionalMetadata={additionalMetadata}
                             {...props}
                           />
                         </ProjectProvider>
