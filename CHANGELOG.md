@@ -1,5 +1,9 @@
 # Changelog
 
+## <small>0.0.9 (2024-12-13)</small>
+
+* fix(apps): share modal  (#134) ([ea1166f](https://github.com/i-am-bee/bee-ui/commit/ea1166f)), closes [#134](https://github.com/i-am-bee/bee-ui/issues/134)
+
 ## <small>0.0.8 (2024-12-12)</small>
 
 * feat: qa for launch  (#130) ([9476ff3](https://github.com/i-am-bee/bee-ui/commit/9476ff3)), closes [#130](https://github.com/i-am-bee/bee-ui/issues/130)
