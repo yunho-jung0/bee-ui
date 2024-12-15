@@ -1,5 +1,10 @@
 # Changelog
 
+## <small>0.0.13 (2024-12-15)</small>
+
+* feat(onboarding): add artifact templates ([a41dcab](https://github.com/i-am-bee/bee-ui/commit/a41dcab))
+* chore: add missing copyright disclaimer ([e6c14b9](https://github.com/i-am-bee/bee-ui/commit/e6c14b9))
+
 ## <small>0.0.12 (2024-12-13)</small>
 
 * chore(ci): add usercontent site url to local build arguments (#142) ([0827fc1](https://github.com/i-am-bee/bee-ui/commit/0827fc1)), closes [#142](https://github.com/i-am-bee/bee-ui/issues/142)
