@@ -55,7 +55,7 @@ export function SidebarButton({
         <Close />
       </Button>
 
-      <p className={classes.title}>Bee</p>
+      <p className={classes.title}>BeeAI</p>
 
       <VersionTag />
     </div>
