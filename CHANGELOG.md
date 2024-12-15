@@ -1,5 +1,9 @@
 # Changelog
 
+## <small>0.0.14 (2024-12-15)</small>
+
+* feat(sidebar): minor copy update ([9e59455](https://github.com/i-am-bee/bee-ui/commit/9e59455))
+
 ## <small>0.0.13 (2024-12-15)</small>
 
 * feat(onboarding): add artifact templates ([a41dcab](https://github.com/i-am-bee/bee-ui/commit/a41dcab))
