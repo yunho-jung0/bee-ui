@@ -1,5 +1,9 @@
 # Changelog
 
+## <small>0.0.17 (2024-12-16)</small>
+
+* feat: prelaunch qa updates (#151) ([f311258](https://github.com/i-am-bee/bee-ui/commit/f311258)), closes [#151](https://github.com/i-am-bee/bee-ui/issues/151)
+
 ## <small>0.0.16 (2024-12-16)</small>
 
 * feat: update styles of ToU (#150) ([12d17cd](https://github.com/i-am-bee/bee-ui/commit/12d17cd)), closes [#150](https://github.com/i-am-bee/bee-ui/issues/150)
