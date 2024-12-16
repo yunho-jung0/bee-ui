@@ -33,7 +33,7 @@ export const Disclaimer = memo(function Disclaimer() {
     <div className={classes.root}>
       <Container size="sm" className={classes.disclaimer}>
         <p>
-          Bee is an experimental AI that can fly off course. Double check all
+          BeeAI is an experimental AI that can fly off course. Double check all
           important information.
         </p>
         {toolsInUse && (
