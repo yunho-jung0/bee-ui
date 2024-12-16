@@ -1,5 +1,11 @@
 # Changelog
 
+## <small>0.0.16 (2024-12-16)</small>
+
+* feat: update styles of ToU (#150) ([12d17cd](https://github.com/i-am-bee/bee-ui/commit/12d17cd)), closes [#150](https://github.com/i-am-bee/bee-ui/issues/150)
+* fix: missing messages, plan button, sources icons (#148) ([a312c17](https://github.com/i-am-bee/bee-ui/commit/a312c17)), closes [#148](https://github.com/i-am-bee/bee-ui/issues/148)
+* chore: minor copy changes ([5a1e34b](https://github.com/i-am-bee/bee-ui/commit/5a1e34b))
+
 ## <small>0.0.15 (2024-12-16)</small>
 
 * feat: new BeeAI logo in signin (#145) ([0362f9d](https://github.com/i-am-bee/bee-ui/commit/0362f9d)), closes [#145](https://github.com/i-am-bee/bee-ui/issues/145)
