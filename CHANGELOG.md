@@ -1,5 +1,12 @@
 # Changelog
 
+## <small>0.0.15 (2024-12-16)</small>
+
+* feat: new BeeAI logo in signin (#145) ([0362f9d](https://github.com/i-am-bee/bee-ui/commit/0362f9d)), closes [#145](https://github.com/i-am-bee/bee-ui/issues/145)
+* feat: responsive updates ([a331f8a](https://github.com/i-am-bee/bee-ui/commit/a331f8a))
+* chore: update assistant templates (#146) ([c277034](https://github.com/i-am-bee/bee-ui/commit/c277034)), closes [#146](https://github.com/i-am-bee/bee-ui/issues/146)
+* fix(assistant-builder): new tool modal error (#144) ([5e4642d](https://github.com/i-am-bee/bee-ui/commit/5e4642d)), closes [#144](https://github.com/i-am-bee/bee-ui/issues/144)
+
 ## <small>0.0.14 (2024-12-15)</small>
 
 * feat(sidebar): minor copy update ([9e59455](https://github.com/i-am-bee/bee-ui/commit/9e59455))
