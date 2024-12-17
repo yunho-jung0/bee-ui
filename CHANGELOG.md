@@ -1,5 +1,10 @@
 # Changelog
 
+## <small>0.0.19 (2024-12-17)</small>
+
+* feat: add "Show app preview" button and hide dark mode video on mobile (#153) ([cd6d74a](https://github.com/i-am-bee/bee-ui/commit/cd6d74a)), closes [#153](https://github.com/i-am-bee/bee-ui/issues/153)
+* feat: change app name to BeeAI ([394a189](https://github.com/i-am-bee/bee-ui/commit/394a189))
+
 ## <small>0.0.18 (2024-12-17)</small>
 
 * fix: responsive layout styles (#152) ([3d5c3fd](https://github.com/i-am-bee/bee-ui/commit/3d5c3fd)), closes [#152](https://github.com/i-am-bee/bee-ui/issues/152)
