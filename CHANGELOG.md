@@ -1,5 +1,9 @@
 # Changelog
 
+## <small>0.0.18 (2024-12-17)</small>
+
+* fix: responsive layout styles (#152) ([3d5c3fd](https://github.com/i-am-bee/bee-ui/commit/3d5c3fd)), closes [#152](https://github.com/i-am-bee/bee-ui/issues/152)
+
 ## <small>0.0.17 (2024-12-16)</small>
 
 * feat: prelaunch qa updates (#151) ([f311258](https://github.com/i-am-bee/bee-ui/commit/f311258)), closes [#151](https://github.com/i-am-bee/bee-ui/issues/151)
