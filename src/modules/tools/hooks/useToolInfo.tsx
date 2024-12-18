@@ -39,6 +39,7 @@ import { encodeEntityWithMetadata } from '@/app/api/utils';
 import { Organization } from '@/app/api/organization/types';
 import { Project } from '@/app/api/projects/types';
 import { useTools } from './useTools';
+import capitalize from 'lodash/capitalize';
 
 export function useToolInfo({
   toolReference,
@@ -87,7 +88,7 @@ export function useToolInfo({
         if (tool?.name === 'DuckDuckGo') return DuckDuckGo;
         return SkeletonIcon;
       }
-      return SYSTEM_TOOL_ICONS[id];
+      return SYSTEM_TOOL_ICONS[id] ?? Tools;
     }
     if (type === 'file_search') return SearchLocate;
     if (type === 'code_interpreter' || type === 'function') return Code;
@@ -123,7 +124,7 @@ export function getStaticToolName({ type, id, tool }: ToolReference) {
 
   switch (type) {
     case 'system':
-      return SYSTEM_TOOL_NAME[id];
+      return SYSTEM_TOOL_NAME[id] ?? id.split('_').map(capitalize).join(' ');
     case 'code_interpreter':
       return 'Python Intepreter';
     case 'function':
