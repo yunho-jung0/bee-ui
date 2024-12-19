@@ -1,5 +1,13 @@
 # Changelog
 
+## <small>0.0.21 (2024-12-19)</small>
+
+* fix: assistant builder form edit bug (#162) ([623863b](https://github.com/i-am-bee/bee-ui/commit/623863b)), closes [#162](https://github.com/i-am-bee/bee-ui/issues/162)
+* fix: assistant creation and show all tools on Tools page (#156) ([436ff00](https://github.com/i-am-bee/bee-ui/commit/436ff00)), closes [#156](https://github.com/i-am-bee/bee-ui/issues/156)
+* fix(tool): fix system tool icon (#158) ([38a73cb](https://github.com/i-am-bee/bee-ui/commit/38a73cb)), closes [#158](https://github.com/i-am-bee/bee-ui/issues/158)
+* feat: pos-tlaunch qa updates (#160) ([45de325](https://github.com/i-am-bee/bee-ui/commit/45de325)), closes [#160](https://github.com/i-am-bee/bee-ui/issues/160)
+* feat(tools): add llm and calculator tools (#132) ([5851900](https://github.com/i-am-bee/bee-ui/commit/5851900)), closes [#132](https://github.com/i-am-bee/bee-ui/issues/132)
+
 ## <small>0.0.20 (2024-12-17)</small>
 
 * fix(apps): correct formatting in error message (#154) ([bbfd730](https://github.com/i-am-bee/bee-ui/commit/bbfd730)), closes [#154](https://github.com/i-am-bee/bee-ui/issues/154)
