@@ -49,25 +49,17 @@ export function Sidebar({ id, isOpen }: SidebarProps) {
       />
 
       <div id={id} aria-hidden={!isOpen} className={classes.panel}>
-        <MainNav />
-
-        <hr />
-
-        <div className={classes.content}>
-          <CollapsibleGroup heading="Agents" className={classes.agents}>
-            <AssistantsNav
-              className={classes.agentsScroll}
-              enableFetch={Boolean(isOpen)}
-            />
-          </CollapsibleGroup>
+        <div className={classes.scroll}>
+          <MainNav />
 
           <hr />
 
-          <CollapsibleGroup heading="Sessions" className={classes.history}>
-            <ThreadsHistory
-              enableFetch={Boolean(isOpen)}
-              className={classes.historyScroll}
-            />
+          <AssistantsNav enableFetch={Boolean(isOpen)} />
+
+          <hr />
+
+          <CollapsibleGroup heading="Sessions">
+            <ThreadsHistory enableFetch={Boolean(isOpen)} />
           </CollapsibleGroup>
         </div>
 
