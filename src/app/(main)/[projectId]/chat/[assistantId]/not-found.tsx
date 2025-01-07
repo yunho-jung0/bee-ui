@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { ErrorPage } from '@/components/ErrorPage/ErrorPage';
+import { EntityNotFound } from '@/components/EntityNotFound/EntityNotFound';
 
 export default function AssistantNotFoundPage() {
-  return <ErrorPage statusCode={404} title="Agent not found" />;
+  return <EntityNotFound type="agent" />;
 }

@@ -14,26 +14,8 @@
  * limitations under the License.
  */
 
-@use 'styles/common' as *;
+import { EntityNotFound } from '@/components/EntityNotFound/EntityNotFound';
 
-.root {
-  z-index: z('modal');
-}
-
-.content {
-  @include type-style(label-02);
-  background-color: $layer-inverse-02;
-  color: $text-inverse;
-  border-radius: $block-radius;
-  max-inline-size: rem(264px);
-  .root.size-sm & {
-    padding: $spacing-02 $spacing-03;
-  }
-  .root.size-md & {
-    padding: $spacing-03 $spacing-04;
-  }
-}
-
-.arrow {
-  fill: $layer-inverse-02;
+export default function ArtifactNotFoundPage() {
+  return <EntityNotFound type="app" />;
 }
