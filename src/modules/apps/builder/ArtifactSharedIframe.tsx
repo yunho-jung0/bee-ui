@@ -18,7 +18,6 @@
 import { createChatCompletion, modulesToPackages } from '@/app/api/apps';
 import { ChatCompletionCreateBody } from '@/app/api/apps/types';
 import { ApiError } from '@/app/api/errors';
-import { useProjectContext } from '@/layout/providers/ProjectProvider';
 import { useTheme } from '@/layout/providers/ThemeProvider';
 import { USERCONTENT_SITE_URL } from '@/utils/constants';
 import { removeTrailingSlash } from '@/utils/helpers';
@@ -26,6 +25,7 @@ import { Loading } from '@carbon/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import classes from './ArtifactSharedIframe.module.scss';
 import AppPlaceholder from './Placeholder.svg';
+import { useAppContext } from '@/layout/providers/AppProvider';
 
 interface Props {
   sourceCode: string | null;
@@ -46,16 +46,19 @@ export function ArtifactSharedIframe({ sourceCode, onFixError }: Props) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [state, setState] = useState<State>(State.LOADING);
   const { appliedTheme: theme } = useTheme();
-  const { project, organization } = useProjectContext();
+  const { project, organization } = useAppContext();
   const [iframeLoadCount, setIframeLoadCount] = useState<number>(0);
 
-  const postMessage = useCallback((message: PostMessage) => {
-    if(iframeLoadCount === 0) return;
-    iframeRef.current?.contentWindow?.postMessage(
-      message,
-      USERCONTENT_SITE_URL,
-    );
-  }, [iframeLoadCount])
+  const postMessage = useCallback(
+    (message: PostMessage) => {
+      if (iframeLoadCount === 0) return;
+      iframeRef.current?.contentWindow?.postMessage(
+        message,
+        USERCONTENT_SITE_URL,
+      );
+    },
+    [iframeLoadCount],
+  );
 
   useEffect(() => {
     postMessage({
@@ -63,13 +66,13 @@ export function ArtifactSharedIframe({ sourceCode, onFixError }: Props) {
       stateChange: {
         code: sourceCode ?? undefined,
         config: {
-          canFixError: Boolean(onFixError)
+          canFixError: Boolean(onFixError),
         },
         theme: theme ?? 'system',
         fullscreen: false,
         ancestorOrigin: window.location.origin,
-      }
-    })
+      },
+    });
   }, [sourceCode, onFixError, theme, postMessage]);
 
   const handleMessage = useCallback(
@@ -151,7 +154,7 @@ export function ArtifactSharedIframe({ sourceCode, onFixError }: Props) {
           'allow-popups-to-escape-sandbox',
         ].join(' ')}
         className={classes.app}
-        onLoad={() => setIframeLoadCount(i => i + 1)}
+        onLoad={() => setIframeLoadCount((i) => i + 1)}
       />
 
       {!sourceCode ? (
@@ -169,13 +172,13 @@ type PostMessage =
   | {
       type: PostMessageType.UPDATE_STATE;
       stateChange: Partial<{
-        fullscreen: boolean,
-        theme: 'light' | 'dark' | 'system',
-        code: string,
+        fullscreen: boolean;
+        theme: 'light' | 'dark' | 'system';
+        code: string;
         config: {
-          canFixError: boolean
-        },
-        ancestorOrigin: string,
+          canFixError: boolean;
+        };
+        ancestorOrigin: string;
       }>;
     }
   | {
@@ -186,7 +189,7 @@ type PostMessage =
 
 enum PostMessageType {
   RESPONSE = 'bee:response',
-  UPDATE_STATE = 'bee:updateState'
+  UPDATE_STATE = 'bee:updateState',
 }
 
 enum State {
