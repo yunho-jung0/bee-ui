@@ -42,7 +42,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import JSON5 from 'json5';
 import { ReactElement, useCallback, useEffect, useId, useMemo } from 'react';
 import { useThreadApi } from '../hooks/useThreadApi';
-import { useChat } from '../providers/ChatProvider';
 import {
   useExpandedStep,
   useExpandedStepActions,
@@ -57,6 +56,7 @@ import { useUserSetting } from '@/layout/hooks/useUserSetting';
 import { getToolApproval, getToolReferenceFromToolCall } from './utils';
 import { useAppContext } from '@/layout/providers/AppProvider';
 import { Spinner } from '@/components/Spinner/Spinner';
+import { useChat } from '../providers/chat-context';
 
 interface Props {
   step: AssistantPlanStep;

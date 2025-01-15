@@ -23,12 +23,11 @@ import { Tooltip } from '@/components/Tooltip/Tooltip';
 import { useBreakpoint } from '@/hooks/useBreakpoint';
 import { useModal } from '@/layout/providers/ModalProvider';
 import { NavbarHeading } from '@/layout/shell/Navbar';
-import { ChatProvider, useChat } from '@/modules/chat/providers/ChatProvider';
+import { ChatProvider } from '@/modules/chat/providers/ChatProvider';
 import {
   ChatMessage,
   MessageMetadata,
   MessageWithFiles,
-  UserChatMessage,
 } from '@/modules/chat/types';
 import { useLayoutActions } from '@/store/layout';
 import { isNotNull } from '@/utils/helpers';
@@ -52,6 +51,7 @@ import { useAppBuilder, useAppBuilderApi } from './AppBuilderProvider';
 import { ArtifactSharedIframe } from './ArtifactSharedIframe';
 import { SourceCodeEditor } from './SourceCodeEditor';
 import { useAppContext } from '@/layout/providers/AppProvider';
+import { useChat } from '@/modules/chat/providers/chat-context';
 import { isBotMessage } from '@/modules/chat/utils';
 
 interface Props {

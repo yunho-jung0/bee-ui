@@ -24,7 +24,7 @@ import clsx from 'clsx';
 import { useEffect, useMemo, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import { SourcesView } from '../layout/SourcesView';
-import { useChat } from '../providers/ChatProvider';
+import { useChat } from '../providers/chat-context';
 import {
   ExpandedStepProvider,
   useExpandedStep,
