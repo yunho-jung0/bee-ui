@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 'use client';
+import { ApiError } from '@/app/api/errors';
 import { createMessage } from '@/app/api/threads-messages';
 import { cancelRun } from '@/app/api/threads-runs';
 import {
@@ -25,12 +26,14 @@ import { isRequiredActionToolApprovals } from '@/app/api/threads-runs/utils';
 import { Thread, ThreadMetadata } from '@/app/api/threads/types';
 import { ToolsUsage } from '@/app/api/tools/types';
 import { decodeEntityWithMetadata, encodeMetadata } from '@/app/api/utils';
+import { UsageLimitModal } from '@/components/UsageLimitModal/UsageLimitModal';
 import { useStateWithRef } from '@/hooks/useStateWithRef';
 import { useHandleError } from '@/layout/hooks/useHandleError';
 import {
   useAppApiContext,
   useAppContext,
 } from '@/layout/providers/AppProvider';
+import { useModal } from '@/layout/providers/ModalProvider';
 import { FILE_SEARCH_TOOL_DEFINITION } from '@/modules/assistants/builder/AssistantBuilderProvider';
 import { GET_USER_LOCATION_FUNCTION_TOOL } from '@/modules/assistants/tools/functionTools';
 import {
@@ -54,17 +57,12 @@ import {
   useState,
 } from 'react';
 import { v4 as uuid } from 'uuid';
-import { threadQuery, threadsQuery } from '../history/queries';
+import { useDeleteMessage } from '../api/useDeleteMessage';
+import { useThreadsQueries } from '../queries';
 import { THREAD_TITLE_MAX_LENGTH } from '../history/ThreadItem';
 import { useGetThreadAssistant } from '../history/useGetThreadAssistant';
 import { useChatStream } from '../hooks/useChatStream';
 import { useThreadApi } from '../hooks/useThreadApi';
-import {
-  messagesWithFilesQuery,
-  readRunQuery,
-  runsQuery,
-  runStepsQuery,
-} from '../queries';
 import {
   ChatMessage,
   MessageWithFiles,
@@ -78,13 +76,6 @@ import {
   isBotMessage,
 } from '../utils';
 import { AssistantModalProvider } from './AssistantModalProvider';
-import { useFilesUpload } from './FilesUploadProvider';
-import { useMessages } from './useMessages';
-import { useModal } from '@/layout/providers/ModalProvider';
-import { ApiError } from '@/app/api/errors';
-import { UsageLimitModal } from '@/components/UsageLimitModal/UsageLimitModal';
-import { PLAN_STEPS_QUERY_PARAMS } from '../assistant-plan/PlanWithSources';
-import { useDeleteMessage } from '../api/useDeleteMessage';
 import {
   ChatContext,
   ChatMessagesContext,
@@ -92,6 +83,8 @@ import {
   RunController,
   SendMessageOptions,
 } from './chat-context';
+import { useFilesUpload } from './FilesUploadProvider';
+import { useMessages } from './useMessages';
 
 interface CancelRunParams {
   threadId: string;
@@ -147,6 +140,7 @@ export function ChatProvider({
     useAppContext();
   const { selectAssistant } = useAppApiContext();
   const queryClient = useQueryClient();
+  const threadsQueries = useThreadsQueries();
   const threadSettingsButtonRef = useRef<HTMLButtonElement>(null);
 
   const { mutateAsync: mutateDeleteMessage } = useDeleteMessage();
@@ -201,8 +195,7 @@ export function ChatProvider({
     ) => {
       if (threadId) {
         queryClient.setQueryData(
-          messagesWithFilesQuery(organization.id, project.id, threadId)
-            .queryKey,
+          threadsQueries.messagesWithFilesList(threadId).queryKey,
           (messages) => {
             if (!newMessage) return messages;
 
@@ -216,26 +209,16 @@ export function ChatProvider({
           },
         );
         queryClient.invalidateQueries({
-          queryKey: messagesWithFilesQuery(
-            organization.id,
-            project.id,
-            threadId,
-          ).queryKey,
+          queryKey: threadsQueries.messagesWithFilesLists(threadId),
         });
         if (runId) {
           queryClient.invalidateQueries({
-            queryKey: runStepsQuery(
-              organization.id,
-              project.id,
-              threadId,
-              runId,
-              PLAN_STEPS_QUERY_PARAMS,
-            ).queryKey,
+            queryKey: threadsQueries.runStepsLists(threadId, runId),
           });
         }
       }
     },
-    [project.id, organization.id, queryClient],
+    [queryClient, threadsQueries],
   );
 
   const getThreadTools = useCallback(() => {
@@ -381,26 +364,23 @@ export function ChatProvider({
     });
 
     if (threadRef.current) {
-      queryClient.invalidateQueries({
-        queryKey: readRunQuery(
-          organization.id,
-          project.id,
+      queryClient.invalidateQueries(
+        threadsQueries.runDetail(
           threadRef.current.id,
           lastMessage?.run_id ?? '',
-        ).queryKey,
-      });
+        ),
+      );
 
       onMessageCompleted?.(threadRef.current, lastMessage?.content ?? '');
     }
   }, [
     getMessages,
     onMessageCompleted,
-    project.id,
-    organization.id,
     queryClient,
     setController,
     setMessages,
     threadRef,
+    threadsQueries,
   ]);
 
   const requireUserApproval = useCallback(
@@ -464,7 +444,7 @@ export function ChatProvider({
     if (thread && getMessages().at(-1)?.role !== 'assistant') {
       queryClient
         .fetchQuery(
-          runsQuery(organization.id, project.id, thread.id, {
+          threadsQueries.runsList(thread.id, {
             limit: 1,
             order: 'desc',
             order_by: 'created_at',
@@ -503,9 +483,8 @@ export function ChatProvider({
     getMessages,
     setMessages,
     queryClient,
-    project.id,
-    organization.id,
     requireUserApproval,
+    threadsQueries,
   ]);
 
   const sendMessage = useCallback(
@@ -691,16 +670,13 @@ export function ChatProvider({
 
               if (files.length > 0) {
                 queryClient.invalidateQueries({
-                  queryKey: threadsQuery(organization.id, project.id).queryKey,
+                  queryKey: threadsQueries.lists(),
                 });
 
-                queryClient.invalidateQueries({
-                  queryKey: threadQuery(
-                    organization.id,
-                    project.id,
-                    thread?.id ?? '',
-                  ).queryKey,
-                });
+                // TODO: The thread detail is not used anywhere on the client, so it's probably not necessary.
+                queryClient.invalidateQueries(
+                  threadsQueries.detail(thread?.id ?? ''),
+                );
               }
             },
           });
@@ -744,6 +720,7 @@ export function ChatProvider({
       chatStream,
       queryClient,
       handleRunCompleted,
+      threadsQueries,
     ],
   );
 

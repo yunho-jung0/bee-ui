@@ -36,11 +36,9 @@ import {
   SkeletonText,
 } from '@carbon/react';
 import { Edit, Folder, Launch, TrashCan } from '@carbon/react/icons';
-import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next-nprogress-bar';
 import { useDeleteAssistant } from '../builder/useDeleteAssistant';
 import { AssistantIcon } from '../icons/AssistantIcon';
-import { assistantsQuery } from '../library/queries';
 import { Assistant } from '../types';
 import classes from './AssistantModal.module.scss';
 
@@ -54,20 +52,13 @@ export default function AssistantModal({
   onDeleteSuccess,
   ...props
 }: AssistantModalProps & ModalProps) {
-  const { project, organization, isProjectReadOnly } = useAppContext();
-
-  const queryClient = useQueryClient();
+  const { project, isProjectReadOnly } = useAppContext();
   const router = useRouter();
 
   const { deleteAssistant } = useDeleteAssistant({
     assistant,
     onSuccess: async () => {
       onDeleteSuccess?.();
-
-      // invalidate all queries on GET:/assistants
-      queryClient.invalidateQueries({
-        queryKey: [assistantsQuery(organization.id, project.id).queryKey.at(0)],
-      });
     },
   });
 
