@@ -23,14 +23,12 @@ interface Props {
   artifacts?: NonNullable<Artifact>[];
   isLoading: boolean;
   pageSize?: number;
-  onDeleteSuccess: (artifact?: ArtifactDeleteResult) => void;
 }
 
 export function AppsList({
   artifacts,
   isLoading,
   pageSize = PAGE_SIZE,
-  onDeleteSuccess,
 }: Props) {
   const { routes, navigate } = useRoutes();
 
@@ -41,7 +39,6 @@ export function AppsList({
           key={artifact.id}
           artifact={artifact}
           cta="Use app"
-          onDeleteSuccess={onDeleteSuccess}
           onClick={() => {
             navigate(routes.artifact({ artifactId: artifact.id }));
           }}

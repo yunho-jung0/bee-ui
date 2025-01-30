@@ -1,5 +1,5 @@
 /**
- * Copyright 2024 IBM Corp.
+ * Copyright 2025 IBM Corp.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { AssistantDeleteResult } from '@/app/api/assistants/types';
 import { CardsListItem } from '@/components/CardsList/CardsListItem';
 import { useAppApiContext } from '@/layout/providers/AppProvider';
 import { useRoutes } from '@/routes/useRoutes';
@@ -26,14 +25,12 @@ interface Props {
   assistants?: NonNullable<Assistant>[];
   isLoading: boolean;
   pageSize?: number;
-  onDeleteSuccess: (assistant?: AssistantDeleteResult) => void;
 }
 
 export function AssistantsList({
   assistants,
   isLoading,
   pageSize = ASSISTANTS_DEFAULT_PAGE_SIZE,
-  onDeleteSuccess,
 }: Props) {
   const { selectAssistant } = useAppApiContext();
   const { routes, navigate } = useRoutes();
@@ -45,7 +42,6 @@ export function AssistantsList({
           key={assistant.id}
           assistant={assistant}
           cta="Start chat"
-          onDeleteSuccess={onDeleteSuccess}
           onClick={() => {
             selectAssistant(assistant);
             navigate(routes.chat({ assistantId: assistant.id }));

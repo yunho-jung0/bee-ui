@@ -33,7 +33,6 @@ import {
   FormLabel,
   IconButton,
   InlineLoading,
-  InlineNotification,
   ModalBody,
   ModalFooter,
   ModalHeader,
@@ -100,17 +99,9 @@ interface FormValues {
 interface Props extends ModalProps {
   tool?: Tool;
   onCreateSuccess?: (tool: ToolResult) => void;
-  onSaveSuccess?: (tool: ToolResult) => void;
-  onDeleteSuccess?: (tool?: ToolDeleteResult) => void;
 }
 
-export function UserToolModal({
-  tool,
-  onCreateSuccess,
-  onSaveSuccess,
-  onDeleteSuccess,
-  ...props
-}: Props) {
+export function UserToolModal({ tool, onCreateSuccess, ...props }: Props) {
   const { onRequestClose } = props;
   const id = useId();
   const { onRequestCloseSafe } = useModalControl();
@@ -144,8 +135,8 @@ export function UserToolModal({
 
   const { mutateAsync: saveTool } = useSaveTool({
     onSuccess: (tool, isNew) => {
-      if (tool) {
-        isNew ? onCreateSuccess?.(tool) : onSaveSuccess?.(tool);
+      if (tool && isNew) {
+        onCreateSuccess?.(tool);
       }
 
       onRequestClose();
@@ -156,11 +147,7 @@ export function UserToolModal({
     mutateAsyncWithConfirmation: deleteTool,
     isPending: isDeletePending,
   } = useDeleteTool({
-    onSuccess: (tool) => {
-      onDeleteSuccess?.(tool);
-
-      onRequestClose();
-    },
+    onSuccess: () => onRequestClose(),
   });
 
   const onSubmit: SubmitHandler<FormValues> = useCallback(

@@ -194,9 +194,11 @@ export function ChatProvider({
             return messages ? [...messages, newMessage] : [newMessage];
           },
         );
+
         queryClient.invalidateQueries({
           queryKey: threadsQueries.messagesWithFilesLists(threadId),
         });
+
         if (runId) {
           queryClient.invalidateQueries({
             queryKey: threadsQueries.runStepsLists(threadId, runId),
@@ -281,7 +283,7 @@ export function ChatProvider({
               : threadMetadata.title;
 
           const updatedThread = await updateThread({
-            id: thread.id,
+            thread,
             body: {
               tool_resources: toolResources,
               metadata: encodeMetadata<ThreadMetadata>(threadMetadata),

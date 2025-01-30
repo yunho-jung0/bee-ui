@@ -103,7 +103,7 @@ export function ThreadItem({ thread }: Props) {
     },
   });
 
-  const { mutateAsync: updateThread } = useUpdateThread();
+  const { mutateAsync: updateThread } = useUpdateThread({ optimistic: true });
 
   const onSubmit: SubmitHandler<FormValues> = useCallback(
     async (values) => {
@@ -116,7 +116,7 @@ export function ThreadItem({ thread }: Props) {
       }
 
       await updateThread({
-        id: thread.id,
+        thread,
         body: {
           metadata: encodeMetadata<ThreadMetadata>({
             ...thread.uiMetadata,
