@@ -19,6 +19,7 @@ import {
   ToolDeleteResult,
   ToolResult,
   ToolsCreateBody,
+  ToolUpdateBody,
 } from '@/app/api/tools/types';
 import { EditableSyntaxHighlighter } from '@/components/EditableSyntaxHighlighter/EditableSyntaxHighlighter';
 import { Modal } from '@/components/Modal/Modal';
@@ -30,6 +31,7 @@ import {
   Button,
   Dropdown,
   FormLabel,
+  IconButton,
   InlineLoading,
   InlineNotification,
   ModalBody,
@@ -40,7 +42,7 @@ import {
   RadioButtonGroup,
   TextInput,
 } from '@carbon/react';
-import { useCallback, useId } from 'react';
+import { useCallback, useId, useLayoutEffect, useState } from 'react';
 import {
   Controller,
   FormProvider,
@@ -53,6 +55,8 @@ import { useDeleteTool } from '../api/mutations/useDeleteTool';
 import { useSaveTool } from '../api/mutations/useSaveTool';
 import { ToolDescription } from '../ToolCard';
 import classes from './UserToolModal.module.scss';
+import clsx from 'clsx';
+import { Edit } from '@carbon/react/icons';
 
 const EXAMPLE_SOURCE_CODE = `# The following code is just an example
 
@@ -121,7 +125,10 @@ export function UserToolModal({
         ) ?? TOOL_TYPES[0],
       name: tool?.name || '',
       sourceCode: tool?.source_code || '',
-      api: { auth: 'none', schema: tool?.open_api_schema ?? '' },
+      api: {
+        auth: tool?.api_key ? 'api-key' : 'none',
+        schema: tool?.open_api_schema ?? '',
+      },
     },
     mode: 'onChange',
   });
@@ -135,11 +142,7 @@ export function UserToolModal({
 
   useConfirmModalCloseOnDirty(isDirty, 'tool');
 
-  const {
-    mutateAsync: saveTool,
-    isError: isSaveError,
-    error: saveError,
-  } = useSaveTool({
+  const { mutateAsync: saveTool } = useSaveTool({
     onSuccess: (tool, isNew) => {
       if (tool) {
         isNew ? onCreateSuccess?.(tool) : onSaveSuccess?.(tool);
@@ -162,10 +165,14 @@ export function UserToolModal({
 
   const onSubmit: SubmitHandler<FormValues> = useCallback(
     async (data) => {
-      await saveTool({
-        id: tool?.id,
-        body: createSaveToolBody(data, tool),
-      });
+      await saveTool(
+        tool
+          ? {
+              id: tool.id,
+              body: getUpdateToolBody(data),
+            }
+          : { id: null, body: getCreateToolBody(data) },
+      );
     },
     [saveTool, tool],
   );
@@ -193,7 +200,6 @@ export function UserToolModal({
                       items={TOOL_TYPES}
                       selectedItem={value}
                       titleText="Type"
-                      // size="lg"
                       onChange={({
                         selectedItem,
                       }: {
@@ -205,30 +211,27 @@ export function UserToolModal({
                 />
               </div>
 
-              {(tool || toolType.key === 'function') && (
-                <div className={classes.group}>
-                  <TextInput
-                    size="lg"
-                    id={`${id}:name`}
-                    labelText="Name of tool"
-                    placeholder="Type tool name"
-                    invalid={errors.name != null}
-                    {...register('name', {
-                      required: true,
-                    })}
-                  />
+              <div className={classes.group}>
+                <TextInput
+                  size="lg"
+                  id={`${id}:name`}
+                  labelText="Name of tool"
+                  placeholder="Type tool name"
+                  invalid={errors.name != null}
+                  {...register('name', {
+                    required: Boolean(tool || toolType.key === 'function'),
+                  })}
+                />
 
-                  <p className={classes.helperText}>
-                    This is your tool’s display name, it can be a real name or
-                    pseudonym.
-                  </p>
-                </div>
-              )}
+                <p className={classes.helperText}>
+                  This is your tool’s display name, it can be a real name or
+                  pseudonym.
+                </p>
+              </div>
 
               {toolType.key === 'api' ? (
                 <>
-                  {/* TODO: make available for update too, when the API is ready */}
-                  {!tool && <ApiAuthenticationMethod />}
+                  <ApiAuthenticationMethod tool={tool} />
 
                   <div className={classes.group}>
                     <Controller
@@ -297,16 +300,6 @@ export function UserToolModal({
                   </p>
                 </div>
               )}
-
-              {isSaveError && (
-                <InlineNotification
-                  className={classes.error}
-                  kind="error"
-                  title={saveError.message}
-                  lowContrast
-                  hideCloseButton
-                />
-              )}
             </SettingsFormGroup>
           </form>
         </FormProvider>
@@ -350,15 +343,25 @@ export function UserToolModal({
   );
 }
 
-function ApiAuthenticationMethod() {
+function ApiAuthenticationMethod({ tool }: { tool?: Tool }) {
+  const [editApiKey, setEditApiKey] = useState(false);
   const id = useId();
   const {
     register,
+    setFocus,
     formState: { errors },
   } = useFormContext<FormValues>();
   const {
     field: { name, onChange, value },
   } = useController<FormValues, 'api.auth'>({ name: 'api.auth' });
+
+  const showApiKeyPreview = tool?.api_key && !editApiKey;
+
+  useLayoutEffect(() => {
+    if (value === 'api-key' && !showApiKeyPreview) {
+      setFocus('api.apiKey');
+    }
+  }, [setFocus, showApiKeyPreview, value]);
 
   return (
     <>
@@ -376,16 +379,38 @@ function ApiAuthenticationMethod() {
       </div>
       {value === 'api-key' && (
         <div className={classes.group}>
-          <PasswordInput
-            size="lg"
-            id={`${id}:name`}
-            labelText=""
-            placeholder="Add your API key"
-            invalid={errors.name != null}
-            {...register('api.apiKey', {
-              required: true,
-            })}
-          />
+          {showApiKeyPreview ? (
+            <div className={classes.apiKeyPreview}>
+              <TextInput
+                labelText=""
+                readOnly
+                value={tool?.api_key ?? ''}
+                id={`${id}:apiKey-saved`}
+              />
+              <IconButton
+                label="Edit API key"
+                kind="ghost"
+                size="md"
+                autoAlign
+                onClick={() => setEditApiKey(true)}
+              >
+                <Edit />
+              </IconButton>
+            </div>
+          ) : (
+            <PasswordInput
+              size="lg"
+              id={`${id}:apiKey`}
+              labelText=""
+              placeholder="Add your API key"
+              hidePasswordLabel="Hide API key"
+              showPasswordLabel="Show API key"
+              invalid={errors.api?.apiKey != null}
+              {...register('api.apiKey', {
+                required: true,
+              })}
+            />
+          )}
         </div>
       )}
     </>
@@ -443,19 +468,38 @@ UserToolModal.View = function ViewUserToolModal({
   );
 };
 
-function createSaveToolBody(
-  { type, name, sourceCode, api }: FormValues,
-  tool?: Tool,
-): ToolsCreateBody {
+function getCreateToolBody({
+  type,
+  name,
+  sourceCode,
+  api,
+}: FormValues): ToolsCreateBody {
   return type.key === 'function'
     ? {
         name,
         source_code: sourceCode ?? '',
       }
     : {
-        ...(tool
-          ? { name }
-          : { api_key: api.auth === 'api-key' ? api.apiKey : undefined }),
+        name: name || undefined,
+        api_key: api.auth === 'api-key' ? api.apiKey : undefined,
+        open_api_schema: api.schema ?? '',
+      };
+}
+
+function getUpdateToolBody({
+  type,
+  name,
+  sourceCode,
+  api,
+}: FormValues): ToolUpdateBody {
+  return type.key === 'function'
+    ? {
+        name,
+        source_code: sourceCode ?? '',
+      }
+    : {
+        name,
+        api_key: api.auth === 'api-key' ? api.apiKey : null,
         open_api_schema: api.schema ?? '',
       };
 }
