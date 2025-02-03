@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Project } from '@/app/api/projects/types';
+import { ProjectResponse } from '@/app/api/projects/types';
 import { Dropdown } from '@/components/Dropdown/Dropdown';
 import { useAppContext } from '@/layout/providers/AppProvider';
 import { useModal } from '@/layout/providers/ModalProvider';
@@ -63,7 +63,7 @@ export function ProjectSelector({ hideReadOnlyTag }: Props) {
                 </span>
               </span>
             )}
-            onChange={(item: Project | null) =>
+            onChange={(item: ProjectResponse | null) =>
               item && navigate(routes.project({ projectId: item.id }))
             }
             selected={selectedItem ?? null}
@@ -106,7 +106,7 @@ export function ProjectSelector({ hideReadOnlyTag }: Props) {
   );
 }
 
-type Option = Project | 'new';
+type Option = ProjectResponse | 'new';
 
 function ViewOnlyTag() {
   return (

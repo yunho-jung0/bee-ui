@@ -17,7 +17,8 @@
 import { paths } from '@/app/api/schema';
 import { EntityWithDecodedMetadata } from '../types';
 
-export type ThreadResult = ThreadsListResponse['data'][number];
+export type ThreadResponse =
+  paths['/v1/threads/{thread_id}']['get']['responses']['200']['content']['application/json'];
 
 export type ThreadCreateBody = NonNullable<
   paths['/v1/threads']['post']['requestBody']
@@ -30,7 +31,7 @@ export interface ThreadMetadata {
   approvedTools?: string[];
 }
 
-export type Thread = EntityWithDecodedMetadata<ThreadResult, ThreadMetadata>;
+export type Thread = EntityWithDecodedMetadata<ThreadResponse, ThreadMetadata>;
 
 export type ThreadsListResponse =
   paths['/v1/threads']['get']['responses']['200']['content']['application/json'];

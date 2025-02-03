@@ -14,27 +14,25 @@
  * limitations under the License.
  */
 
-import { listProjectUsers } from '.';
 import { paths } from '../schema';
 
 export type ProjectUsersListQuery = NonNullable<
   paths['/v1/organization/projects/{project_id}/users']['get']['parameters']['query']
 >;
 
-export type ProjectUsersListResponse = NonNullable<
-  Awaited<ReturnType<typeof listProjectUsers>>
->;
+export type ProjectUsersListResponse =
+  paths['/v1/organization/projects/{project_id}/users']['get']['responses']['200']['content']['application/json'];
 
-export type ProjectUser = ProjectUsersListResponse['data'][number];
-export type ProjectUserRole = ProjectUser['role'];
+export type ProjectUserResponse =
+  paths['/v1/organization/projects/{project_id}/users/{user_id}']['get']['responses']['200']['content']['application/json'];
 
-export type ProjectUserCreateBody = NonNullable<
-  paths['/v1/organization/projects/{project_id}/users']['post']['requestBody']['content']['application/json']
->;
+export type ProjectUserRole = ProjectUserResponse['role'];
 
-export type ProjectUserCreateResponse = NonNullable<
-  paths['/v1/organization/projects/{project_id}/users']['post']['responses']['200']['content']['application/json']
->;
+export type ProjectUserCreateBody =
+  paths['/v1/organization/projects/{project_id}/users']['post']['requestBody']['content']['application/json'];
+
+export type ProjectUserCreateResponse =
+  paths['/v1/organization/projects/{project_id}/users']['post']['responses']['200']['content']['application/json'];
 
 export type ProjectUserUpdateBody = NonNullable<
   paths['/v1/organization/projects/{project_id}/users/{user_id}']['post']['requestBody']

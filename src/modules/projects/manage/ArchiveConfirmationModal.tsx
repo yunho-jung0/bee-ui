@@ -15,7 +15,7 @@
  */
 
 import { Organization } from '@/app/api/organization/types';
-import { Project } from '@/app/api/projects/types';
+import { ProjectResponse } from '@/app/api/projects/types';
 import { Modal } from '@/components/Modal/Modal';
 import { ModalProps } from '@/layout/providers/ModalProvider';
 import { useToast } from '@/layout/providers/ToastProvider';
@@ -35,7 +35,7 @@ import { useArchiveProject } from '../api/mutations/useArchiveProject';
 import classes from './ArchiveConfirmationModal.module.scss';
 
 interface Props extends ModalProps {
-  project: Project;
+  project: ProjectResponse;
   organization: Organization;
 }
 

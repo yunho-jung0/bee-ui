@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-import { listUsers } from '.';
 import { paths } from '../schema';
 
-export type UsersListQuery = NonNullable<
+export type OrganizationUsersListQuery = NonNullable<
   paths['/v1/organization/users']['get']['parameters']['query']
 >;
 
-export type UsersListResponse = NonNullable<
-  Awaited<ReturnType<typeof listUsers>>
->;
+export type OrganizationUsersListResponse =
+  paths['/v1/organization/users']['get']['responses']['200']['content']['application/json'];
 
-export type OrganizationUser = UsersListResponse['data'][number];
+export type OrganizationUser = OrganizationUsersListResponse['data'][number];

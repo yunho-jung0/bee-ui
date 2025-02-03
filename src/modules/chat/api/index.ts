@@ -27,9 +27,9 @@ import {
   readTrace,
 } from '@/app/api/threads-runs';
 import {
+  Run,
   RunsListQuery,
-  RunStepsQuery,
-  ThreadRun,
+  RunStepsListQuery,
 } from '@/app/api/threads-runs/types';
 import { Thread, ThreadsListQuery } from '@/app/api/threads/types';
 import { decodeEntityWithMetadata } from '@/app/api/utils';
@@ -145,7 +145,7 @@ export function useThreadsQueries() {
           queryKey: [...threadsQueries.runDetails(threadId), runId],
           queryFn: () => readRun(organization.id, project.id, threadId, runId),
           select: (data) =>
-            data ? decodeEntityWithMetadata<ThreadRun>(data) : undefined,
+            data ? decodeEntityWithMetadata<Run>(data) : undefined,
           meta: {
             errorToast: false,
           },
@@ -169,9 +169,9 @@ export function useThreadsQueries() {
       runStepsList: (
         threadId: string,
         runId: string,
-        params?: RunStepsQuery,
+        params?: RunStepsListQuery,
       ) => {
-        const usedParams: RunStepsQuery = {
+        const usedParams: RunStepsListQuery = {
           order: 'asc',
           ...params,
         };

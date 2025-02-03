@@ -15,7 +15,7 @@
  */
 
 import { Organization } from '@/app/api/organization/types';
-import { Project } from '@/app/api/projects/types';
+import { ProjectResponse } from '@/app/api/projects/types';
 import { Modal } from '@/components/Modal/Modal';
 import { ModalProps } from '@/layout/providers/ModalProvider';
 import {
@@ -32,7 +32,7 @@ import { useUpdateProject } from '../api/mutations/useUpdateProject';
 import { useListAllProjects } from '../api/queries/useListAllProjects';
 
 interface Props extends ModalProps {
-  project: Project;
+  project: ProjectResponse;
   organization: Organization;
 }
 

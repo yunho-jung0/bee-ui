@@ -14,31 +14,32 @@
  * limitations under the License.
  */
 
-import { listRuns, listRunSteps, readRun, updateRun } from '.';
 import { paths } from '../schema';
 import { MessageFeedback } from '../threads-messages/types';
 import { EntityWithDecodedMetadata } from '../types';
 
-export type RunsCreateBody =
+export type RunCreateBody =
   paths['/v1/threads/{thread_id}/runs']['post']['requestBody']['content']['application/json'];
 
-export type RunsCreateResponse = NonNullable<
-  paths['/v1/threads/{thread_id}/runs']['post']['responses']['200']['content']['text/event-stream']
->;
+export type RunCreateResponse =
+  paths['/v1/threads/{thread_id}/runs']['post']['responses']['200']['content']['text/event-stream'];
 
 export type RunsListQuery = NonNullable<
   paths['/v1/threads/{thread_id}/runs']['get']['parameters']['query']
 >;
 
-export type RunsListResponse = NonNullable<
-  Awaited<ReturnType<typeof listRuns>>
->;
+export type RunsListResponse =
+  paths['/v1/threads/{thread_id}/runs']['get']['responses']['200']['content']['application/json'];
 
-export type ThreadRunResult = NonNullable<Awaited<ReturnType<typeof readRun>>>;
+export type RunResponse =
+  paths['/v1/threads/{thread_id}/runs/{run_id}']['get']['responses']['200']['content']['application/json'];
 
-export type ThreadRunUpdateResult = NonNullable<
-  Awaited<ReturnType<typeof updateRun>>
->;
+export type RunUpdateBody = NonNullable<
+  paths['/v1/threads/{thread_id}/runs/{run_id}']['post']['requestBody']
+>['content']['application/json'];
+
+export type RunUpdateResponse =
+  paths['/v1/threads/{thread_id}/runs/{run_id}']['post']['responses']['200']['content']['application/json'];
 
 export type RunMetadata = {
   feedback?: MessageFeedback;
@@ -48,11 +49,21 @@ export type RunMetadata = {
   };
 };
 
-export type ThreadRun = EntityWithDecodedMetadata<ThreadRunResult, RunMetadata>;
+export type Run = EntityWithDecodedMetadata<RunResponse, RunMetadata>;
 
-export type RunsCreateResponseEvent = RunsCreateResponse['event'];
+export type RunStepsListQuery = NonNullable<
+  paths['/v1/threads/{thread_id}/runs/{run_id}/steps']['get']['parameters']['query']
+>;
 
-export const THREAD_RUN_EVENT_NAMES = [
+export type RunStepsListResponse =
+  paths['/v1/threads/{thread_id}/runs/{run_id}/steps']['get']['responses']['200']['content']['application/json'];
+
+export type RunStepResponse =
+  paths['/v1/threads/{thread_id}/runs/{run_id}/steps/{step_id}']['get']['responses']['200']['content']['application/json'];
+
+export type RunCreateResponseEvent = RunCreateResponse['event'];
+
+export const RUN_EVENT_NAMES = [
   'thread.run.created',
   'thread.run.queued',
   'thread.run.in_progress',
@@ -63,8 +74,9 @@ export const THREAD_RUN_EVENT_NAMES = [
   'thread.run.cancelling',
   'thread.run.cancelled',
   'thread.run.expired',
-] as const satisfies RunsCreateResponseEvent[];
-export type RunEventName = (typeof THREAD_RUN_EVENT_NAMES)[number];
+] as const satisfies RunCreateResponseEvent[];
+
+type RunEventName = (typeof RUN_EVENT_NAMES)[number];
 
 export const RUN_STEP_EVENT_NAMES = [
   'thread.run.step.created',
@@ -73,16 +85,17 @@ export const RUN_STEP_EVENT_NAMES = [
   'thread.run.step.failed',
   'thread.run.step.cancelled',
   'thread.run.step.expired',
-] as const satisfies RunsCreateResponseEvent[];
+] as const satisfies RunCreateResponseEvent[];
+
 type RunStepEventName = (typeof RUN_STEP_EVENT_NAMES)[number];
 
-export type RunEventResponse = RunsCreateResponse & {
+export type RunEventResponse = RunCreateResponse & {
   event: RunEventName;
 };
 
-export type RunStepEventResponse = RunsCreateResponse & {
+export type RunStepEventResponse = RunCreateResponse & {
   event: RunStepEventName;
-  data: NonNullable<RunsCreateResponse['data']>;
+  data: NonNullable<RunCreateResponse['data']>;
 };
 
 export type RunEventRequiresAction = RunEventResponse & {
@@ -92,6 +105,7 @@ export type RunEventRequiresAction = RunEventResponse & {
 export type RequiredAction = NonNullable<
   RunEventRequiresAction['data']
 >['required_action'];
+
 export type RequiredActionToolOutput = RequiredAction & {
   type: 'submit_tool_outputs';
 };
@@ -100,19 +114,19 @@ export type RequiredActionToolApprovals = RequiredAction & {
   type: 'submit_tool_approvals';
 };
 
-export type RunStepDeltaEventResponse = RunsCreateResponse & {
+export type RunStepDeltaEventResponse = RunCreateResponse & {
   event: 'thread.run.step.delta';
 };
 
-export type MessageDeltaEventResponse = RunsCreateResponse & {
+export type MessageDeltaEventResponse = RunCreateResponse & {
   event: 'thread.message.delta';
 };
 
-export type MessageCreatedEventResponse = RunsCreateResponse & {
+export type MessageCreatedEventResponse = RunCreateResponse & {
   event: 'thread.message.created';
 };
 
-export type MessageCompletedEventResponse = RunsCreateResponse & {
+export type MessageCompletedEventResponse = RunCreateResponse & {
   event: 'thread.message.completed';
 };
 
@@ -125,6 +139,7 @@ export type RunStepEventResponseDetailToolCall = RunStepEventResponseDetail & {
 };
 export type ResponseToolCall =
   RunStepEventResponseDetailToolCall['tool_calls'][number];
+
 export type ToolType = ResponseToolCall['type'];
 
 export type RunStepDeltaEventDetails = NonNullable<
@@ -135,7 +150,7 @@ export type RunStepDeltaEventDetailsThought = RunStepDeltaEventDetails & {
   type: 'thought';
 };
 
-export type ToolApprovals = RunsCreateBody['tool_approvals'];
+export type ToolApprovals = RunCreateBody['tool_approvals'];
 
 export type SystemToolCall = Extract<
   ResponseToolCall,
@@ -223,23 +238,10 @@ export type StepToolCall = {
     }
 );
 
-export type RunStepsQuery = NonNullable<
-  paths['/v1/threads/{thread_id}/runs/{run_id}/steps']['get']['parameters']['query']
->;
-
-export type RunStepsResponse = NonNullable<
-  Awaited<ReturnType<typeof listRunSteps>>
->;
-export type RunStep = RunStepsResponse['data'][number];
-
 export type FunctionToolDefinition = Extract<
-  NonNullable<RunsCreateBody['tools']>[number],
+  NonNullable<RunCreateBody['tools']>[number],
   { type: 'function' }
 >;
-
-export type RunUpdateBody = NonNullable<
-  paths['/v1/threads/{thread_id}/runs/{run_id}']['post']['requestBody']
->['content']['application/json'];
 
 export type ToolApprovalRequest =
   RequiredActionToolApprovals['submit_tool_approvals']['tool_calls'][number];

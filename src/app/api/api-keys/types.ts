@@ -17,17 +17,14 @@
 import { paths } from '../schema';
 import { FetchParamsOrderBy } from '../utils';
 
-export type ApiKeysCreateBody = NonNullable<
-  paths['/v1/organization/projects/{project_id}/api_keys']['post']['requestBody']
->['content']['application/json'];
+export type ApiKeyCreateBody =
+  paths['/v1/organization/projects/{project_id}/api_keys']['post']['requestBody']['content']['application/json'];
 
-export type ApiKey = NonNullable<
-  paths['/v1/organization/projects/{project_id}/api_keys/{api_key_id}']['get']['responses']['200']['content']['application/json']
->;
+export type ApiKeyResponse =
+  paths['/v1/organization/projects/{project_id}/api_keys/{api_key_id}']['get']['responses']['200']['content']['application/json'];
 
-export type ApiKeyDeleteResult = NonNullable<
-  paths['/v1/organization/projects/{project_id}/api_keys/{api_key_id}']['delete']['responses']['200']['content']['application/json']
->;
+export type ApiKeyDeleteResponse =
+  paths['/v1/organization/projects/{project_id}/api_keys/{api_key_id}']['delete']['responses']['200']['content']['application/json'];
 
 export type ApiKeysListQuery = NonNullable<
   paths['/v1/organization/api_keys']['get']['parameters']['query']

@@ -19,6 +19,5 @@ import { paths } from '../schema';
 export type ChatCompletionResponse =
   paths['/v1/chat/completions']['post']['responses']['200']['content']['application/json'];
 
-export type ChatCompletionCreateBody = NonNullable<
-  paths['/v1/chat/completions']['post']['requestBody']
->['content']['application/json'];
+export type ChatCompletionCreateBody =
+  paths['/v1/chat/completions']['post']['requestBody']['content']['application/json'];

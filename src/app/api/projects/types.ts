@@ -14,24 +14,20 @@
  * limitations under the License.
  */
 
-import { listProjects, updateProject } from '.';
 import { paths } from '../schema';
 
-export type Project =
+export type ProjectResponse =
   paths['/v1/organization/projects/{project_id}']['get']['responses']['200']['content']['application/json'];
 
-export type ProjectCreateBody = NonNullable<
-  paths['/v1/organization/projects']['post']['requestBody']
->['content']['application/json'];
+export type ProjectCreateBody =
+  paths['/v1/organization/projects']['post']['requestBody']['content']['application/json'];
 
-export type ProjectUpdateResponse = NonNullable<
-  Awaited<ReturnType<typeof updateProject>>
->;
+export type ProjectUpdateResponse =
+  paths['/v1/organization/projects/{project_id}']['post']['responses']['200']['content']['application/json'];
 
 export type ProjectsListQuery = NonNullable<
   paths['/v1/organization/projects']['get']['parameters']['query']
 >;
 
-export type ProjectsListResponse = NonNullable<
-  Awaited<ReturnType<typeof listProjects>>
->;
+export type ProjectsListResponse =
+  paths['/v1/organization/projects']['get']['responses']['200']['content']['application/json'];

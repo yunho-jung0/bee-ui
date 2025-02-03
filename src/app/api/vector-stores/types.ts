@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { createVectorStore, deleteVectorStore, listVectorStores } from '.';
 import { paths } from '../schema';
 import { FetchParamsOrderBy } from '../utils';
 
@@ -22,23 +21,20 @@ export type VectorStoreCreateBody = NonNullable<
   paths['/v1/vector_stores']['post']['requestBody']
 >['content']['application/json'];
 
-export type VectorStoreCreateResponse = NonNullable<
-  Awaited<ReturnType<typeof createVectorStore>>
->;
+export type VectorStoreCreateResponse =
+  paths['/v1/vector_stores']['post']['responses']['200']['content']['application/json'];
 
-export type VectorStoreDeleteResponse = NonNullable<
-  Awaited<ReturnType<typeof deleteVectorStore>>
->;
+export type VectorStoreDeleteResponse =
+  paths['/v1/vector_stores/{vector_store_id}']['delete']['responses']['200']['content']['application/json'];
 
-export type VectorStoresListResponse = NonNullable<
-  Awaited<ReturnType<typeof listVectorStores>>
->;
+export type VectorStoresListResponse =
+  paths['/v1/vector_stores']['get']['responses']['200']['content']['application/json'];
 
 export type VectorStoresListQuery = NonNullable<
   paths['/v1/vector_stores']['get']['parameters']['query']
 >;
 
-export type VectorStore =
+export type VectorStoreResponse =
   paths['/v1/vector_stores/{vector_store_id}']['get']['responses']['200']['content']['application/json'];
 
 export type VectorStoresListQueryOrderBy =

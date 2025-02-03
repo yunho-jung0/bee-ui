@@ -16,13 +16,11 @@
 
 import { paths } from '../schema';
 
-export type MessageCreateBody = NonNullable<
-  paths['/v1/threads/{thread_id}/messages']['post']['requestBody']['content']['application/json']
->;
+export type MessageCreateBody =
+  paths['/v1/threads/{thread_id}/messages']['post']['requestBody']['content']['application/json'];
 
-export type MessagesListResponse = NonNullable<
-  paths['/v1/threads/{thread_id}/messages']['get']['responses']['200']['content']['application/json']
->;
+export type MessagesListResponse =
+  paths['/v1/threads/{thread_id}/messages']['get']['responses']['200']['content']['application/json'];
 
 export type MessagesListQuery = NonNullable<
   paths['/v1/threads/{thread_id}/messages']['get']['parameters']['query']
@@ -32,7 +30,8 @@ export type MessageUpdateBody = NonNullable<
   paths['/v1/threads/{thread_id}/messages/{message_id}']['post']['requestBody']
 >['content']['application/json'];
 
-export type MessageResult = MessagesListResponse['data'][number];
+export type MessageResponse =
+  paths['/v1/threads/{thread_id}/messages/{message_id}']['get']['responses']['200']['content']['application/json'];
 
 export type MessageAttachments = NonNullable<MessageCreateBody['attachments']>;
 
@@ -56,11 +55,11 @@ const MessageFeedbackCategories = [
   'latency',
 ] as const;
 
-export type MessageFeedbackCategories =
+export type MessageFeedbackCategory =
   (typeof MessageFeedbackCategories)[number];
 
 export type MessageFeedback = {
-  categories?: MessageFeedbackCategories[];
+  categories?: MessageFeedbackCategory[];
   comment?: string;
   vote?: 'up' | 'down';
 };

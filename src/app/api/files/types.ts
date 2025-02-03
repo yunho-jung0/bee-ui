@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { readFile } from '.';
 import { paths } from '../schema';
 
 export type FileCreateBody =
@@ -25,4 +24,5 @@ export type FileCreateResponse =
 
 export type FilePurpose = FileCreateBody['purpose'];
 
-export type FileEntity = NonNullable<Awaited<ReturnType<typeof readFile>>>;
+export type FileResponse =
+  paths['/v1/files/{file_id}']['get']['responses']['200']['content']['application/json'];

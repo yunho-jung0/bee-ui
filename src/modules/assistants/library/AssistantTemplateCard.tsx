@@ -15,7 +15,7 @@
  */
 
 import { Organization } from '@/app/api/organization/types';
-import { Project } from '@/app/api/projects/types';
+import { ProjectResponse } from '@/app/api/projects/types';
 import { ToolReference, ToolsUsage } from '@/app/api/tools/types';
 import { CardsListItem } from '@/components/CardsList/CardsListItem';
 import { useVectorStore } from '@/modules/knowledge/api/queries/useVectorStore';
@@ -40,7 +40,7 @@ interface Props {
   selected?: boolean;
   onClick?: MouseEventHandler;
   organization: Organization;
-  project: Project;
+  project: ProjectResponse;
 }
 
 export function AssistantTemplateCard({
@@ -87,7 +87,7 @@ function ToolsInfo({
 }: {
   tools: ToolsUsage;
   organization: Organization;
-  project: Project;
+  project: ProjectResponse;
 }) {
   const displayedTools = tools.slice(0, 3);
   const remainingToolsCount = tools.length - displayedTools.length;

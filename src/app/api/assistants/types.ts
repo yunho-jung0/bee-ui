@@ -20,10 +20,10 @@ import { FetchParamsOrderBy } from '../utils';
 export type AssistantsListResponse =
   paths['/v1/assistants']['get']['responses']['200']['content']['application/json'];
 
-export type AssistantResult =
+export type AssistantResponse =
   paths['/v1/assistants/{assistant_id}']['get']['responses']['200']['content']['application/json'];
 
-export type AssistantDeleteResult =
+export type AssistantDeleteResponse =
   paths['/v1/assistants/{assistant_id}']['delete']['responses']['200']['content']['application/json'];
 
 type AssistantCreateBodyApi = NonNullable<
@@ -51,4 +51,4 @@ export type AssistantsListQueryOrderBy =
 
 export type AssistantModel = AssistantCreateBody['model'];
 
-export type AssistantTool = AssistantResult['tools'][number];
+export type AssistantTool = AssistantResponse['tools'][number];

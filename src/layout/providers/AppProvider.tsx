@@ -16,8 +16,8 @@
 
 'use client';
 import { Organization } from '@/app/api/organization/types';
-import { ProjectUser } from '@/app/api/projects-users/types';
-import { Project } from '@/app/api/projects/types';
+import { ProjectUserRole } from '@/app/api/projects-users/types';
+import { ProjectResponse } from '@/app/api/projects/types';
 import { encodeEntityWithMetadata } from '@/app/api/utils';
 import { useAssistant } from '@/modules/assistants/api/queries/useAssistant';
 import { Assistant } from '@/modules/assistants/types';
@@ -38,9 +38,9 @@ import { useWorkspace } from './WorkspaceProvider';
 
 export interface AppContextValue {
   assistant: Assistant | null;
-  project: Project;
+  project: ProjectResponse;
   organization: Organization;
-  role: ProjectUser['role'] | null;
+  role: ProjectUserRole | null;
   isProjectReadOnly?: boolean;
   featureFlags: Record<FeatureName, boolean>;
   onPageLeaveRef: MutableRefObject<() => void>;
@@ -48,7 +48,7 @@ export interface AppContextValue {
 
 export interface AppApiContextValue {
   selectAssistant: (assistant: Assistant | null) => void;
-  selectProject: (project: Project) => void;
+  selectProject: (project: ProjectResponse) => void;
   onPageLeave: () => void;
 }
 
@@ -69,7 +69,7 @@ export function AppProvider({
   children,
 }: PropsWithChildren<Props>) {
   const { organization, project: initialProject } = useWorkspace();
-  const [project, setProject] = useState<Project>(initialProject);
+  const [project, setProject] = useState<ProjectResponse>(initialProject);
   const [assistant, setAssistant] = useState<Assistant | null>(null);
   const onPageLeaveRef = useRef(() => null);
   const userId = useUserProfile((state) => state.id);

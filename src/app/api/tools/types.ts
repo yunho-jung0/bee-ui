@@ -20,7 +20,7 @@ import { SystemToolId, ToolType } from '../threads-runs/types';
 import { EntityWithDecodedMetadata } from '../types';
 import { FetchParamsOrderBy } from '../utils';
 
-export type ToolsCreateBody = NonNullable<
+export type ToolCreateBody = NonNullable<
   paths['/v1/tools']['post']['requestBody']
 >['content']['application/json'];
 
@@ -28,16 +28,14 @@ export type ToolUpdateBody = NonNullable<
   paths['/v1/tools/{tool_id}']['post']['requestBody']
 >['content']['application/json'];
 
-export type ToolResult = NonNullable<
-  paths['/v1/tools/{tool_id}']['get']['responses']['200']['content']['application/json']
->;
+export type ToolResponse =
+  paths['/v1/tools/{tool_id}']['get']['responses']['200']['content']['application/json'];
 
-export type ToolDeleteResult = NonNullable<
-  paths['/v1/tools/{tool_id}']['delete']['responses']['200']['content']['application/json']
->;
+export type ToolDeleteResponse =
+  paths['/v1/tools/{tool_id}']['delete']['responses']['200']['content']['application/json'];
 
 export type Tool = EntityWithDecodedMetadata<
-  ToolResult,
+  ToolResponse,
   {
     description_short?: string;
   }

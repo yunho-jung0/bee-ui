@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import { Project } from '@/app/api/projects/types';
+import { ProjectResponse } from '@/app/api/projects/types';
 import { useQuery } from '@tanstack/react-query';
 import { useProjectsQueries } from '..';
 
 interface Props {
   id: string;
-  initialData?: Project;
+  initialData?: ProjectResponse;
 }
 
 export function useProject({ id, ...props }: Props) {

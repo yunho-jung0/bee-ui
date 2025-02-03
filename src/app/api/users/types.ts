@@ -18,10 +18,10 @@ import { UserMetadata } from '@/store/user-profile/types';
 import { paths } from '../schema';
 import { EntityWithDecodedMetadata } from '../types';
 
-export type UserResult =
+export type UserResponse =
   paths['/v1/users']['get']['responses']['200']['content']['application/json'];
 
-export type UserEntity = EntityWithDecodedMetadata<UserResult, UserMetadata>;
+export type UserEntity = EntityWithDecodedMetadata<UserResponse, UserMetadata>;
 
 export type UserCreateBody = NonNullable<
   paths['/v1/users']['post']['requestBody']

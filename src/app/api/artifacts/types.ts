@@ -20,10 +20,10 @@ import { FetchParamsOrderBy } from '../utils';
 export type ArtifactsListResponse =
   paths['/v1/artifacts']['get']['responses']['200']['content']['application/json'];
 
-export type ArtifactResult =
+export type ArtifactResponse =
   paths['/v1/artifacts/{artifact_id}']['get']['responses']['200']['content']['application/json'];
 
-export type ArtifactDeleteResult =
+export type ArtifactDeleteResponse =
   paths['/v1/artifacts/{artifact_id}']['delete']['responses']['200']['content']['application/json'];
 
 export type ArtifactCreateBody = NonNullable<
