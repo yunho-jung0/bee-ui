@@ -14,28 +14,27 @@
  * limitations under the License.
  */
 
-import { paths } from '../schema';
+import { ApiQuery, ApiRequestBody, ApiResponse } from '@/@types/utils';
 import { FetchParamsOrderBy } from '../utils';
 
-export type VectorStoreCreateBody = NonNullable<
-  paths['/v1/vector_stores']['post']['requestBody']
->['content']['application/json'];
-
-export type VectorStoreCreateResponse =
-  paths['/v1/vector_stores']['post']['responses']['200']['content']['application/json'];
-
-export type VectorStoreDeleteResponse =
-  paths['/v1/vector_stores/{vector_store_id}']['delete']['responses']['200']['content']['application/json'];
-
-export type VectorStoresListResponse =
-  paths['/v1/vector_stores']['get']['responses']['200']['content']['application/json'];
-
-export type VectorStoresListQuery = NonNullable<
-  paths['/v1/vector_stores']['get']['parameters']['query']
->;
+export type VectorStoresListResponse = ApiResponse<'/v1/vector_stores'>;
 
 export type VectorStoreResponse =
-  paths['/v1/vector_stores/{vector_store_id}']['get']['responses']['200']['content']['application/json'];
+  ApiResponse<'/v1/vector_stores/{vector_store_id}'>;
+
+export type VectorStoreCreateResponse = ApiResponse<
+  '/v1/vector_stores',
+  'post'
+>;
+
+export type VectorStoreDeleteResponse = ApiResponse<
+  '/v1/vector_stores/{vector_store_id}',
+  'delete'
+>;
+
+export type VectorStoreCreateBody = ApiRequestBody<'/v1/vector_stores'>;
+
+export type VectorStoresListQuery = ApiQuery<'/v1/vector_stores'>;
 
 export type VectorStoresListQueryOrderBy =
   FetchParamsOrderBy<VectorStoresListQuery>;

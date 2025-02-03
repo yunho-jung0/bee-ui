@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-import { paths } from '../schema';
-
-export type OrganizationUsersListQuery = NonNullable<
-  paths['/v1/organization/users']['get']['parameters']['query']
->;
+import { ApiQuery, ApiResponse } from '@/@types/utils';
 
 export type OrganizationUsersListResponse =
-  paths['/v1/organization/users']['get']['responses']['200']['content']['application/json'];
+  ApiResponse<'/v1/organization/users'>;
+
+export type OrganizationUsersListQuery = ApiQuery<'/v1/organization/users'>;
 
 export type OrganizationUser = OrganizationUsersListResponse['data'][number];

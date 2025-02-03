@@ -14,27 +14,30 @@
  * limitations under the License.
  */
 
-import { paths } from '../schema';
+import { ApiQuery, ApiRequestBody, ApiResponse } from '@/@types/utils';
+
+export type VectorStoreFilesListResponse =
+  ApiResponse<'/v1/vector_stores/{vector_store_id}/files'>;
+
+export type VectorStoreFileResponse =
+  ApiResponse<'/v1/vector_stores/{vector_store_id}/files/{file_id}'>;
+
+export type VectorStoreFileCreateResponse = ApiResponse<
+  '/v1/vector_stores/{vector_store_id}/files',
+  'post'
+>;
+
+export type VectorStoreFileDeleteResponse = ApiResponse<
+  '/v1/vector_stores/{vector_store_id}/files/{file_id}',
+  'delete'
+>;
 
 export type VectorStoreFileCreateBody =
-  paths['/v1/vector_stores/{vector_store_id}/files']['post']['requestBody']['content']['application/json'];
+  ApiRequestBody<'/v1/vector_stores/{vector_store_id}/files'>;
 
-export type VectorStoreFilesListQuery = NonNullable<
-  paths['/v1/vector_stores/{vector_store_id}/files']['get']['parameters']['query']
->;
+export type VectorStoreFilesListQuery =
+  ApiQuery<'/v1/vector_stores/{vector_store_id}/files'>;
 
 export type VectorStoreFilesListQueryOrder = NonNullable<
   VectorStoreFilesListQuery['order']
 >;
-
-export type VectorStoreFileCreateResponse =
-  paths['/v1/vector_stores/{vector_store_id}/files']['post']['responses']['200']['content']['application/json'];
-
-export type VectorStoreFileDeleteResponse =
-  paths['/v1/vector_stores/{vector_store_id}/files/{file_id}']['delete']['responses']['200']['content']['application/json'];
-
-export type VectorStoreFilesListResponse =
-  paths['/v1/vector_stores/{vector_store_id}/files']['get']['responses']['200']['content']['application/json'];
-
-export type VectorStoreFileResponse =
-  paths['/v1/vector_stores/{vector_store_id}/files/{file_id}']['get']['responses']['200']['content']['application/json'];

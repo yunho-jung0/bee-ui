@@ -14,24 +14,21 @@
  * limitations under the License.
  */
 
-import { paths } from '../schema';
-
-export type MessageCreateBody =
-  paths['/v1/threads/{thread_id}/messages']['post']['requestBody']['content']['application/json'];
+import { ApiQuery, ApiRequestBody, ApiResponse } from '@/@types/utils';
 
 export type MessagesListResponse =
-  paths['/v1/threads/{thread_id}/messages']['get']['responses']['200']['content']['application/json'];
-
-export type MessagesListQuery = NonNullable<
-  paths['/v1/threads/{thread_id}/messages']['get']['parameters']['query']
->;
-
-export type MessageUpdateBody = NonNullable<
-  paths['/v1/threads/{thread_id}/messages/{message_id}']['post']['requestBody']
->['content']['application/json'];
+  ApiResponse<'/v1/threads/{thread_id}/messages'>;
 
 export type MessageResponse =
-  paths['/v1/threads/{thread_id}/messages/{message_id}']['get']['responses']['200']['content']['application/json'];
+  ApiResponse<'/v1/threads/{thread_id}/messages/{message_id}'>;
+
+export type MessageCreateBody =
+  ApiRequestBody<'/v1/threads/{thread_id}/messages'>;
+
+export type MessageUpdateBody =
+  ApiRequestBody<'/v1/threads/{thread_id}/messages/{message_id}'>;
+
+export type MessagesListQuery = ApiQuery<'/v1/threads/{thread_id}/messages'>;
 
 export type MessageAttachments = NonNullable<MessageCreateBody['attachments']>;
 

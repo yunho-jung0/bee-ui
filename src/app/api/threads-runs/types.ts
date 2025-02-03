@@ -14,32 +14,40 @@
  * limitations under the License.
  */
 
-import { paths } from '../schema';
+import { ApiQuery, ApiRequestBody, ApiResponse } from '@/@types/utils';
 import { MessageFeedback } from '../threads-messages/types';
 import { EntityWithDecodedMetadata } from '../types';
 
-export type RunCreateBody =
-  paths['/v1/threads/{thread_id}/runs']['post']['requestBody']['content']['application/json'];
+export type RunsListResponse = ApiResponse<'/v1/threads/{thread_id}/runs'>;
 
-export type RunCreateResponse =
-  paths['/v1/threads/{thread_id}/runs']['post']['responses']['200']['content']['text/event-stream'];
+export type RunResponse = ApiResponse<'/v1/threads/{thread_id}/runs/{run_id}'>;
 
-export type RunsListQuery = NonNullable<
-  paths['/v1/threads/{thread_id}/runs']['get']['parameters']['query']
+export type RunCreateResponse = ApiResponse<
+  '/v1/threads/{thread_id}/runs',
+  'post',
+  'text/event-stream'
 >;
 
-export type RunsListResponse =
-  paths['/v1/threads/{thread_id}/runs']['get']['responses']['200']['content']['application/json'];
+export type RunUpdateResponse = ApiResponse<
+  '/v1/threads/{thread_id}/runs/{run_id}',
+  'post'
+>;
 
-export type RunResponse =
-  paths['/v1/threads/{thread_id}/runs/{run_id}']['get']['responses']['200']['content']['application/json'];
+export type RunStepsListResponse =
+  ApiResponse<'/v1/threads/{thread_id}/runs/{run_id}/steps'>;
 
-export type RunUpdateBody = NonNullable<
-  paths['/v1/threads/{thread_id}/runs/{run_id}']['post']['requestBody']
->['content']['application/json'];
+export type RunStepResponse =
+  ApiResponse<'/v1/threads/{thread_id}/runs/{run_id}/steps/{step_id}'>;
 
-export type RunUpdateResponse =
-  paths['/v1/threads/{thread_id}/runs/{run_id}']['post']['responses']['200']['content']['application/json'];
+export type RunCreateBody = ApiRequestBody<'/v1/threads/{thread_id}/runs'>;
+
+export type RunUpdateBody =
+  ApiRequestBody<'/v1/threads/{thread_id}/runs/{run_id}'>;
+
+export type RunsListQuery = ApiQuery<'/v1/threads/{thread_id}/runs'>;
+
+export type RunStepsListQuery =
+  ApiQuery<'/v1/threads/{thread_id}/runs/{run_id}/steps'>;
 
 export type RunMetadata = {
   feedback?: MessageFeedback;
@@ -50,16 +58,6 @@ export type RunMetadata = {
 };
 
 export type Run = EntityWithDecodedMetadata<RunResponse, RunMetadata>;
-
-export type RunStepsListQuery = NonNullable<
-  paths['/v1/threads/{thread_id}/runs/{run_id}/steps']['get']['parameters']['query']
->;
-
-export type RunStepsListResponse =
-  paths['/v1/threads/{thread_id}/runs/{run_id}/steps']['get']['responses']['200']['content']['application/json'];
-
-export type RunStepResponse =
-  paths['/v1/threads/{thread_id}/runs/{run_id}/steps/{step_id}']['get']['responses']['200']['content']['application/json'];
 
 export type RunCreateResponseEvent = RunCreateResponse['event'];
 

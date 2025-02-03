@@ -14,15 +14,18 @@
  * limitations under the License.
  */
 
-import { paths } from '@/app/api/schema';
+import { ApiQuery, ApiRequestBody, ApiResponse } from '@/@types/utils';
 import { EntityWithDecodedMetadata } from '../types';
 
-export type ThreadResponse =
-  paths['/v1/threads/{thread_id}']['get']['responses']['200']['content']['application/json'];
+export type ThreadsListResponse = ApiResponse<'/v1/threads'>;
 
-export type ThreadCreateBody = NonNullable<
-  paths['/v1/threads']['post']['requestBody']
->['content']['application/json'];
+export type ThreadResponse = ApiResponse<'/v1/threads/{thread_id}'>;
+
+export type ThreadCreateBody = ApiRequestBody<'/v1/threads'>;
+
+export type ThreadUpdateBody = ApiRequestBody<'/v1/threads/{thread_id}'>;
+
+export type ThreadsListQuery = ApiQuery<'/v1/threads'>;
 
 export interface ThreadMetadata {
   assistantName?: string;
@@ -32,14 +35,3 @@ export interface ThreadMetadata {
 }
 
 export type Thread = EntityWithDecodedMetadata<ThreadResponse, ThreadMetadata>;
-
-export type ThreadsListResponse =
-  paths['/v1/threads']['get']['responses']['200']['content']['application/json'];
-
-export type ThreadsListQuery = NonNullable<
-  paths['/v1/threads']['get']['parameters']['query']
->;
-
-export type ThreadUpdateBody = NonNullable<
-  paths['/v1/threads/{thread_id}']['post']['requestBody']
->['content']['application/json'];

@@ -14,26 +14,26 @@
  * limitations under the License.
  */
 
-import { paths } from '../schema';
-
-export type ProjectUsersListQuery = NonNullable<
-  paths['/v1/organization/projects/{project_id}/users']['get']['parameters']['query']
->;
+import { ApiQuery, ApiRequestBody, ApiResponse } from '@/@types/utils';
 
 export type ProjectUsersListResponse =
-  paths['/v1/organization/projects/{project_id}/users']['get']['responses']['200']['content']['application/json'];
+  ApiResponse<'/v1/organization/projects/{project_id}/users'>;
 
 export type ProjectUserResponse =
-  paths['/v1/organization/projects/{project_id}/users/{user_id}']['get']['responses']['200']['content']['application/json'];
+  ApiResponse<'/v1/organization/projects/{project_id}/users/{user_id}'>;
 
-export type ProjectUserRole = ProjectUserResponse['role'];
+export type ProjectUserCreateResponse = ApiResponse<
+  '/v1/organization/projects/{project_id}/users',
+  'post'
+>;
 
 export type ProjectUserCreateBody =
-  paths['/v1/organization/projects/{project_id}/users']['post']['requestBody']['content']['application/json'];
+  ApiRequestBody<'/v1/organization/projects/{project_id}/users'>;
 
-export type ProjectUserCreateResponse =
-  paths['/v1/organization/projects/{project_id}/users']['post']['responses']['200']['content']['application/json'];
+export type ProjectUserUpdateBody =
+  ApiRequestBody<'/v1/organization/projects/{project_id}/users/{user_id}'>;
 
-export type ProjectUserUpdateBody = NonNullable<
-  paths['/v1/organization/projects/{project_id}/users/{user_id}']['post']['requestBody']
->['content']['application/json'];
+export type ProjectUsersListQuery =
+  ApiQuery<'/v1/organization/projects/{project_id}/users'>;
+
+export type ProjectUserRole = ProjectUserResponse['role'];

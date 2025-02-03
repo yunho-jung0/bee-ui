@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-import { paths } from '../schema';
+import { ApiRequestBody, ApiResponse } from '@/@types/utils';
 
-export type FileCreateBody =
-  paths['/v1/files']['post']['requestBody']['content']['multipart/form-data'];
+export type FileResponse = ApiResponse<'/v1/files/{file_id}'>;
 
-export type FileCreateResponse =
-  paths['/v1/files']['post']['responses']['200']['content']['application/json'];
+export type FileCreateResponse = ApiResponse<'/v1/files', 'post'>;
+
+export type FileCreateBody = ApiRequestBody<
+  '/v1/files',
+  'post',
+  'multipart/form-data'
+>;
 
 export type FilePurpose = FileCreateBody['purpose'];
-
-export type FileResponse =
-  paths['/v1/files/{file_id}']['get']['responses']['200']['content']['application/json'];
