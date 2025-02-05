@@ -15,7 +15,6 @@
  */
 
 import { Run } from '@/app/api/threads-runs/types';
-import { useAppContext } from '@/layout/providers/AppProvider';
 import { RunSetup } from '@/modules/assistants/builder/Builder';
 import { KnowledgeBaseName } from '@/modules/knowledge/common/KnowledgeBaseName';
 import { ToolName } from '@/modules/tools/common/ToolName';
@@ -32,8 +31,6 @@ export function RunSetupDelta({
   run: Run;
   nextRunSetup?: RunSetup;
 }) {
-  const { organization, project } = useAppContext();
-
   const deltaMessages = useMemo(() => {
     const deltaMessages = [];
     if (run.instructions != nextRunSetup?.instructions)
@@ -58,9 +55,9 @@ export function RunSetupDelta({
 
     const runResources = run.uiMetadata.resources;
     const assistantVectorStoreId = runResources?.assistant?.vectorStoreId;
-    const nextRunAstVectorStoreId =
+    const nextRunVectorStoreId =
       nextRunSetup?.resources?.assistant?.vectorStoreId;
-    if (assistantVectorStoreId !== nextRunAstVectorStoreId) {
+    if (assistantVectorStoreId !== nextRunVectorStoreId) {
       if (assistantVectorStoreId) {
         deltaMessages.push(
           <>
@@ -69,10 +66,10 @@ export function RunSetupDelta({
           </>,
         );
       }
-      if (nextRunAstVectorStoreId) {
+      if (nextRunVectorStoreId) {
         deltaMessages.push(
           <>
-            <KnowledgeBaseName vectoreStoreId={nextRunAstVectorStoreId} /> added
+            <KnowledgeBaseName vectoreStoreId={nextRunVectorStoreId} /> added
           </>,
         );
       }

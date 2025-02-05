@@ -49,3 +49,4 @@ export * from './threads-messages';
 export * from './threads-runs';
 export * from './users';
 export * from './vector-stores';
+export * from '@/modules/chat/api/messages';

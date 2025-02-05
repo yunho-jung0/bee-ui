@@ -29,6 +29,7 @@ import {
   EntityMetadata,
   EntityResultWithMetadata,
   EntityWithEncodedMetadata,
+  ListDataResponse,
 } from './types';
 
 export async function maybeGetJsonBody(response: Response): Promise<unknown> {
@@ -162,6 +163,12 @@ export function getRequestHeaders(
     ...getProjectHeaders(organizationId, projectId),
     ...additionalHeaders,
   };
+}
+
+export function getNextPageParam(listResponse: ListDataResponse) {
+  return listResponse?.has_more && listResponse?.last_id
+    ? listResponse.last_id
+    : undefined;
 }
 
 export type FetchParamsOrderBy<

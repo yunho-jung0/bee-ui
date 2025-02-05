@@ -17,6 +17,7 @@
 import {
   MessageAttachments,
   MessageResponse,
+  MessagesListResponse,
 } from '@/app/api/threads-messages/types';
 import { AssistantPlan, Run } from '@/app/api/threads-runs/types';
 import { EntityWithDecodedMetadata } from '@/app/api/types';
@@ -40,6 +41,10 @@ export type Message = EntityWithDecodedMetadata<
 
 export type MessageWithFiles = MessageResponse & {
   files?: Partial<VectoreStoreFileUpload>[];
+};
+
+export type MessageWithFilesResponse = Omit<MessagesListResponse, 'data'> & {
+  data: MessageWithFiles[];
 };
 
 export type ChatMessageBase = Omit<

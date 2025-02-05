@@ -18,13 +18,13 @@ import {
   ensureAppBuilderAssistant,
   fetchThread,
   listMessagesWithFiles,
-  MESSAGES_PAGE_SIZE,
 } from '@/app/api/rsc';
 import { MessageResponse } from '@/app/api/threads-messages/types';
 import { ensureDefaultOrganizationId } from '@/app/auth/rsc';
 import { AppBuilder } from '@/modules/apps/builder/AppBuilder';
 import { AppBuilderProvider } from '@/modules/apps/builder/AppBuilderProvider';
 import { extractCodeFromMessageContent } from '@/modules/apps/utils';
+import { MESSAGES_DEFAULT_PARAMS } from '@/modules/chat/api/queries/useListMessagesWithFiles';
 import { getMessagesFromThreadMessages } from '@/modules/chat/utils';
 import { LayoutInitializer } from '@/store/layout/LayouInitializer';
 import { notFound } from 'next/navigation';
@@ -51,9 +51,7 @@ export default async function AppBuilderPage({
     organizationId,
     projectId,
     threadId,
-    {
-      limit: MESSAGES_PAGE_SIZE,
-    },
+    MESSAGES_DEFAULT_PARAMS,
   );
 
   return (
@@ -62,7 +60,7 @@ export default async function AppBuilderPage({
     >
       <AppBuilderProvider
         code={extractCodeFromMessageContent(
-          getLastMessageWithStreamlitCode(initialMessages)?.content ?? '',
+          getLastMessageWithStreamlitCode(initialMessages?.data)?.content ?? '',
         )}
       >
         <AppBuilder
@@ -75,7 +73,9 @@ export default async function AppBuilderPage({
   );
 }
 
-function getLastMessageWithStreamlitCode(messages: MessageResponse[]) {
+function getLastMessageWithStreamlitCode(messages?: MessageResponse[]) {
+  if (!messages) return null;
+
   const chatMessages = getMessagesFromThreadMessages(messages);
   return chatMessages.findLast((message) =>
     Boolean(extractCodeFromMessageContent(message.content)),
