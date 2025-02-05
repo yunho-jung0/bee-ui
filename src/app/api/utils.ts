@@ -15,7 +15,8 @@
  */
 
 import { isNotNull } from '@/utils/helpers';
-import { FetchResponse, HeadersOptions } from 'openapi-fetch';
+import type { FetchResponse, HeadersOptions } from 'openapi-fetch';
+import type { MediaType } from 'openapi-typescript-helpers';
 import {
   ApiError,
   HttpError,
@@ -58,14 +59,17 @@ export function handleFailedResponse(response: Response, body: unknown): never {
   });
 }
 
-type SucessFetchResponse<T, O> = Extract<
-  FetchResponse<T, O>,
-  { error?: never }
->;
+type SucessFetchResponse<
+  T extends Record<string | number, any>,
+  O,
+  M extends MediaType,
+> = Extract<FetchResponse<T, O, M>, { error?: never }>;
 
-export function assertSuccessResponse<T, O>(
-  res: FetchResponse<T, O>,
-): asserts res is SucessFetchResponse<T, O> {
+export function assertSuccessResponse<
+  T extends Record<string | number, any>,
+  O,
+  M extends MediaType,
+>(res: FetchResponse<T, O, M>): asserts res is SucessFetchResponse<T, O, M> {
   if (res.error != null) {
     handleFailedResponse(res.response, res.error);
   }
