@@ -16,8 +16,8 @@
 
 import { updateProject } from '@/app/api/projects';
 import {
+  Project,
   ProjectCreateBody,
-  ProjectResponse,
   ProjectsListResponse,
   ProjectUpdateResponse,
 } from '@/app/api/projects/types';
@@ -40,7 +40,7 @@ export function useUpdateProject({ onSuccess }: Props = {}) {
       project,
       body,
     }: {
-      project: ProjectResponse;
+      project: Project;
       body: ProjectCreateBody;
     }) => updateProject(organization.id, project.id, body),
     onSuccess: (data, { project }) => {

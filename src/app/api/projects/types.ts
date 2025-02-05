@@ -29,3 +29,5 @@ export type ProjectUpdateResponse = ApiResponse<
 export type ProjectCreateBody = ApiRequestBody<'/v1/organization/projects'>;
 
 export type ProjectsListQuery = ApiQuery<'/v1/organization/projects'>;
+
+export type Project = ProjectResponse;

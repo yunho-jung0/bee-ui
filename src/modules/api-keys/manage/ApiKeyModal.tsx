@@ -15,7 +15,7 @@
  */
 
 import { ApiKeyResponse } from '@/app/api/api-keys/types';
-import { ProjectResponse } from '@/app/api/projects/types';
+import { Project } from '@/app/api/projects/types';
 import { Modal } from '@/components/Modal/Modal';
 import { SettingsFormGroup } from '@/components/SettingsFormGroup/SettingsFormGroup';
 import { TextWithCopyButton } from '@/components/TextWithCopyButton/TextWithCopyButton';
@@ -130,7 +130,7 @@ export function ApiKeyModal({ onSuccess, ...props }: Props) {
                     onChange={({
                       selectedItem,
                     }: {
-                      selectedItem?: ProjectResponse | null;
+                      selectedItem?: Project | null;
                     }) => onChange(selectedItem ?? null)}
                     itemToString={(item) => item?.name ?? ''}
                   />

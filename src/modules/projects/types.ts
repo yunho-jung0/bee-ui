@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { ProjectResponse } from '@/app/api/projects/types';
+import { Project } from '@/app/api/projects/types';
 
-export type ProjectWithScope = ProjectResponse & {
+export type ProjectWithScope = Project & {
   readOnly?: boolean;
 };

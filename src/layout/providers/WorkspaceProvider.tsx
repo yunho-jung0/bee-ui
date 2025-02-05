@@ -17,12 +17,12 @@
 'use client';
 
 import { Organization } from '@/app/api/organization/types';
-import { ProjectResponse } from '@/app/api/projects/types';
+import { Project } from '@/app/api/projects/types';
 import { createContext, PropsWithChildren, use, useMemo } from 'react';
 
 interface WorkspaceContext {
   organization: Organization;
-  project: ProjectResponse;
+  project: Project;
 }
 
 const WorkspaceContext = createContext<WorkspaceContext>(

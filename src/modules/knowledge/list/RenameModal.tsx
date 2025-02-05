@@ -15,7 +15,7 @@
  */
 
 import { Organization } from '@/app/api/organization/types';
-import { ProjectResponse } from '@/app/api/projects/types';
+import { Project } from '@/app/api/projects/types';
 import { VectorStoreResponse } from '@/app/api/vector-stores/types';
 import { Modal } from '@/components/Modal/Modal';
 import { ModalProps } from '@/layout/providers/ModalProvider';
@@ -34,7 +34,7 @@ import { useUpdateVectorStore } from '../api/mutations/useUpdateVectorStore';
 
 interface Props extends ModalProps {
   vectorStore: VectorStoreResponse;
-  project: ProjectResponse;
+  project: Project;
   organization: Organization;
 }
 
