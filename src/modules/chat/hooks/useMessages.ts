@@ -14,32 +14,57 @@
  * limitations under the License.
  */
 
-import { MESSAGES_PAGE_SIZE } from '@/app/api/threads-messages';
 import { Thread } from '@/app/api/threads/types';
 import { useImmerWithGetter } from '@/hooks/useImmerWithGetter';
 import { useListMessagesWithFiles } from '../api/queries/useListMessagesWithFiles';
-import { MessageWithFiles } from '../types';
-import { getMessagesFromThreadMessages } from '../utils';
+import { MessageWithFilesResponse } from '../types';
+import {
+  getMessageFromThreadMessage,
+  getMessagesFromThreadMessages,
+} from '../utils';
+import { useFetchNextPageInView } from '@/hooks/useFetchNextPageInView';
+import { useEffect } from 'react';
 
 export function useMessages({
   thread,
   initialData,
 }: {
   thread?: Thread | null;
-  initialData?: MessageWithFiles[];
+  initialData?: MessageWithFilesResponse;
 }) {
-  const { data, refetch } = useListMessagesWithFiles({
+  const { data, ...queryRest } = useListMessagesWithFiles({
     threadId: thread?.id,
-    params: {
-      limit: MESSAGES_PAGE_SIZE,
-    },
     initialData,
   });
 
+  const [getMessages, setMessages] = useImmerWithGetter(
+    thread ? getMessagesFromThreadMessages(data.toReversed() ?? []) : [],
+  );
+
+  useEffect(() => {
+    if (data) {
+      setMessages((messages) => {
+        data.forEach((message) => {
+          if (!messages.some(({ id }) => id === message.id))
+            messages.unshift(getMessageFromThreadMessage(message));
+        });
+      });
+    }
+  }, [data, setMessages]);
+
+  const { fetchNextPage, isFetching, hasNextPage } = queryRest;
+  const { ref: fetchNextPageInViewAnchorRef } = useFetchNextPageInView({
+    onFetchNextPage: fetchNextPage,
+    isFetching,
+    hasNextPage,
+  });
+
   return {
-    messages: useImmerWithGetter(
-      thread ? getMessagesFromThreadMessages(data ?? []) : [],
-    ),
-    refetch,
+    getMessages,
+    setMessages,
+    queryControl: {
+      ...queryRest,
+      fetchNextPageInViewAnchorRef,
+    },
   };
 }
