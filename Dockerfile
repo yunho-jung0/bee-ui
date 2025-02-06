@@ -4,8 +4,12 @@ FROM node:20.11.1-alpine AS base
 # Set working directory
 WORKDIR /app
 
+ENV HUSKY=0
+
 # Copy only necessary files for dependency installation
 COPY package.json pnpm-lock.yaml ./
+
+COPY patches ./patches
 
 # Install dependencies using pnpm
 RUN corepack enable pnpm && pnpm install --frozen-lockfile
