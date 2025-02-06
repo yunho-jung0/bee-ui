@@ -1,5 +1,5 @@
 # Use Node.js 20.11.1 with Alpine for a lightweight image
-FROM node:20-alpine AS base
+FROM node:20.11.1-alpine AS base
 
 # Set working directory
 WORKDIR /app
