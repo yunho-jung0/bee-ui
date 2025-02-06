@@ -44,32 +44,8 @@ ARG NEXT_PUBLIC_ARTIFACTS_SITE_URL
 
 RUN corepack enable pnpm && pnpm run build;
 
-# Production image, copy all the files and run next
-FROM base AS runner
-
-ENV NODE_ENV development
-
-# https://github.com/nodejs/docker-node/blob/main/docs/BestPractices.md
-RUN deluser --remove-home node \
-  && addgroup -S node -g 1001 \
-  && adduser -S -G node -u 1001 node
-
-COPY --from=builder ${APP_DIR}/public ./public
-
-# Set the correct permission for prerender cache
-RUN mkdir .next
-RUN chown node:node .next
-
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder --chown=node:node ${APP_DIR}/.next/standalone ./
-COPY --from=builder --chown=node:node ${APP_DIR}/.next/static ./.next/static
-
 EXPOSE 3000
 
 ENV PORT 3000
 
-# server.js is created by next build from the standalone output
-# https://nextjs.org/docs/pages/api-reference/next-config-js/output
-
-CMD pnpm run start
+CMD npm run start
