@@ -7,8 +7,6 @@
     "build": "next build",
     "start": "next start",
     "start:dev": "next dev",
-    "lint": "next lint && pnpm lint:css",
-    "lint:css": "stylelint '**/*.scss'",
     "format": "prettier --write .",
     "schema:generate": "pnpm schema:generate:api && pnpm schema:generate:observe",
     "schema:generate:api": "dotenv -e .env.local cross-var -- pnpm dlx openapi-typescript %SCHEMA_API_URL% -o ./src/app/api/schema.d.ts --alphabetize",

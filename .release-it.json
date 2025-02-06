@@ -21,7 +21,6 @@
     }
   },
   "hooks": {
-    "before:init": ["pnpm lint"],
     "after:bump": ["pnpm build"]
   }
 }
