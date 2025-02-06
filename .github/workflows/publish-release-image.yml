@@ -33,7 +33,7 @@ jobs:
           push: true
           build-args: |
             NEXT_PUBLIC_APP_NAME=BeeAI
-            NEXT_PUBLIC_USERCONTENT_SITE_URL=http://localhost:5173
+            NEXT_PUBLIC_USERCONTENT_SITE_URL=http://52.118.190.205:5173
           tags: |
             ${{ vars.DOCKER_REGISTRY }}/i-am-bee/bee-ui-local:latest
             ${{ vars.DOCKER_REGISTRY }}/i-am-bee/bee-ui-local:${{ steps.get_version.outputs.VERSION }}

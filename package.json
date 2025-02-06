@@ -10,14 +10,12 @@
     "lint": "next lint && pnpm lint:css",
     "lint:css": "stylelint '**/*.scss'",
     "format": "prettier --write .",
-    "prepare": "husky",
     "schema:generate": "pnpm schema:generate:api && pnpm schema:generate:observe",
     "schema:generate:api": "dotenv -e .env.local cross-var -- pnpm dlx openapi-typescript %SCHEMA_API_URL% -o ./src/app/api/schema.d.ts --alphabetize",
     "schema:generate:observe": "dotenv -e .env.local cross-var -- pnpm dlx openapi-typescript %SCHEMA_OBSERVE_URL% -o ./src/app/observe/api/schema.d.ts --alphabetize",
     "schema:generate-local": "pnpm schema:generate-local:api && pnpm schema:generate-local:observe",
-    "schema:generate-local:api": "pnpm dlx openapi-typescript 'http://localhost:4000/docs/json?showHidden=true' -o ./src/app/api/schema.d.ts --alphabetize",
-    "schema:generate-local:observe": "pnpm dlx openapi-typescript 'http://localhost:4318/docs/json' -o ./src/app/observe/api/schema.d.ts --alphabetize",
-    "copyright": "./scripts/copyright.sh",
+    "schema:generate-local:api": "pnpm dlx openapi-typescript 'http://52.118.190.205:4000/docs/json?showHidden=true' -o ./src/app/api/schema.d.ts --alphabetize",
+    "schema:generate-local:observe": "pnpm dlx openapi-typescript 'http://52.118.190.205:4318/docs/json' -o ./src/app/observe/api/schema.d.ts --alphabetize",
     "release": "release-it"
   },
   "dependencies": {
