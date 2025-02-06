@@ -1,17 +1,11 @@
 FROM node:20.11.1-alpine AS base
 
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine
-# Install necessary dependencies
+# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
 
 ENV APP_DIR=/app
 
-# Create a non-root user and group
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-
-# Ensure the app directory exists and set permissions
-RUN mkdir -p ${APP_DIR} && chown -R appuser:appgroup ${APP_DIR}
-
+RUN mkdir -p ${APP_DIR}
 WORKDIR ${APP_DIR}
 
 # Install dependencies only when needed
@@ -19,32 +13,16 @@ FROM base AS deps
 
 ENV HUSKY=0
 
-# Switch to root user to install dependencies
-USER root
-
 # Install dependencies based on the preferred package manager
 COPY package.json pnpm-lock.yaml* ./
 COPY patches ./patches
 RUN corepack enable pnpm && pnpm i --frozen-lockfile
 
-# Change ownership to non-root user
-RUN chown -R appuser:appgroup ${APP_DIR}
-
 # Rebuild the source code only when needed
 FROM base AS builder
 
-# Switch to root to copy files
-USER root
-
 COPY --from=deps ${APP_DIR}/node_modules ./node_modules
 COPY . .
-
-# Set correct permissions for cache directories to prevent EACCES errors
-RUN mkdir -p /app/.cache /app/.next /app/node_modules/.cache \
-    && chown -R appuser:appgroup /app
-
-# Switch to non-root user
-USER appuser
 
 ARG NEXT_PUBLIC_APP_NAME
 ARG NEXT_PUBLIC_AUTH_PROVIDER_ID
@@ -68,4 +46,4 @@ EXPOSE 3000
 
 ENV PORT 3000
 
-CMD ["pnpm", "run", "start"]
+CMD pnpm run start
