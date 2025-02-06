@@ -74,5 +74,4 @@ ENV PORT 3000
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output
 
-RUN npm install pnpm@8.15.6
-CMD ./node_modules/.bin/pnpm start
+CMD npm run start
