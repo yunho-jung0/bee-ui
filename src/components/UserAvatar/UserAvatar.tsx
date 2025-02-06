@@ -35,7 +35,7 @@ const getUserInitials = (name: string) => {
   // Names can have unicode characters in them, use unicode aware regex
   const matches = [...name.matchAll(/(\p{L}{1})\p{L}+/gu)];
   const initials = (matches.shift()?.[1] ?? '') + (matches.pop()?.[1] ?? '');
-  return initials.toUpperCase();
+  return initials?.toUpperCase();
 };
 
 export function CurrentUserAvatar(props: HTMLAttributes<HTMLSpanElement>) {

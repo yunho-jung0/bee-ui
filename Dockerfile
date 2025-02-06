@@ -11,7 +11,6 @@ WORKDIR ${APP_DIR}
 # Install dependencies only when needed
 FROM base AS deps
 
-ENV CI=1
 ENV HUSKY=0
 
 # Install dependencies based on the preferred package manager
@@ -21,8 +20,6 @@ RUN corepack enable pnpm && pnpm i --frozen-lockfile
 
 # Rebuild the source code only when needed
 FROM base AS builder
-
-ENV CI=1
 
 COPY --from=deps ${APP_DIR}/node_modules ./node_modules
 COPY . .
@@ -42,10 +39,11 @@ ARG NEXT_PUBLIC_WAITLIST_URL
 ARG NEXT_PUBLIC_BEE_AGENT_PLATFORM_URL
 ARG NEXT_PUBLIC_ARTIFACTS_SITE_URL
 
+ENV NEXT_DISABLE_WARNINGS=1
 RUN corepack enable pnpm && pnpm run build;
 
 EXPOSE 3000
 
 ENV PORT 3000
 
-CMD npm run start
+CMD pnpm run start
