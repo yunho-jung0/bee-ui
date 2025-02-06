@@ -1,71 +1,27 @@
+# Use Node.js 20.11.1 with Alpine for a lightweight image
 FROM node:20.11.1-alpine AS base
 
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine
-# Install necessary dependencies
-RUN apk add --no-cache libc6-compat
+# Set working directory
+WORKDIR /app
 
-ENV APP_DIR=/app
+# Copy only necessary files for dependency installation
+COPY package.json pnpm-lock.yaml ./
 
-# Create a non-root user and group
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+# Install dependencies using pnpm
+RUN corepack enable pnpm && pnpm install --frozen-lockfile
 
-# Ensure the app directory exists and set permissions
-RUN mkdir -p ${APP_DIR} && chown -R appuser:appgroup ${APP_DIR}
-
-WORKDIR ${APP_DIR}
-
-# Install dependencies only when needed
-FROM base AS deps
-
-ENV HUSKY=0
-
-# Switch to root user to install dependencies
-USER root
-
-# Install dependencies based on the preferred package manager
-COPY package.json pnpm-lock.yaml* ./
-COPY patches ./patches
-RUN corepack enable pnpm && pnpm i --frozen-lockfile
-
-# Change ownership to non-root user
-RUN chown -R appuser:appgroup ${APP_DIR}
-
-# Rebuild the source code only when needed
-FROM base AS builder
-
-# Switch to root to copy files
-USER root
-
-COPY --from=deps ${APP_DIR}/node_modules ./node_modules
+# Copy the rest of the application
 COPY . .
 
-# Set correct permissions for cache directories to prevent EACCES errors
-RUN mkdir -p /app/.cache /app/.next /app/node_modules/.cache \
-    && chown -R appuser:appgroup /app
+# Set environment variables
+ENV NEXT_DISABLE_WARNINGS=1 \
+    PORT=3000
 
-# Switch to non-root user
-USER appuser
+# Build the application
+RUN pnpm run build
 
-ARG NEXT_PUBLIC_APP_NAME
-ARG NEXT_PUBLIC_AUTH_PROVIDER_ID
-ARG NEXT_PUBLIC_AUTH_LABEL
-ARG NEXT_PUBLIC_AUTH_PARAMS
-ARG NEXT_PUBLIC_TOU_TEXT
-ARG NEXT_PUBLIC_PRIVACY_URL
-ARG NEXT_PUBLIC_DOCUMENTATION_URL
-ARG NEXT_PUBLIC_FEEDBACK_URL
-ARG NEXT_PUBLIC_USERCONTENT_SITE_URL
-ARG AUTH_JWKS_ENDPOINT
-ARG DUMMY_JWT_TOKEN
-ARG NEXT_PUBLIC_WAITLIST_URL
-ARG NEXT_PUBLIC_BEE_AGENT_PLATFORM_URL
-ARG NEXT_PUBLIC_ARTIFACTS_SITE_URL
-
-ENV NEXT_DISABLE_WARNINGS=1
-RUN corepack enable pnpm && pnpm run build;
-
+# Expose the application port
 EXPOSE 3000
 
-ENV PORT 3000
-
+# Run the application
 CMD ["pnpm", "run", "start"]
