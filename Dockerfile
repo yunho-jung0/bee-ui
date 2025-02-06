@@ -47,7 +47,7 @@ RUN corepack enable pnpm && pnpm run build;
 # Production image, copy all the files and run next
 FROM base AS runner
 
-ENV NODE_ENV production
+ENV NODE_ENV development
 
 # https://github.com/nodejs/docker-node/blob/main/docs/BestPractices.md
 RUN deluser --remove-home node \
@@ -73,4 +73,4 @@ ENV PORT 3000
 
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output
-CMD node server.js
+CMD pnpm start
